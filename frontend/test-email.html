@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kiểm tra gửi Email</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        input, button {
+            padding: 8px;
+            width: 100%;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+            margin-bottom: 10px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        #result {
+            margin-top: 20px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            display: none;
+        }
+        .success {
+            color: green;
+        }
+        .error {
+            color: red;
+        }
+        .section {
+            border: 1px solid #ddd;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+        }
+        h2 {
+            margin-top: 0;
+        }
+    </style>
+</head>
+<body>
+    <h1>Kiểm tra các API liên quan đến Email</h1>
+    
+    <div class="form-group">
+        <label for="email">Email:</label>
+        <input type="email" id="email" placeholder="Nhập email của bạn">
+    </div>
+    
+    <div class="section">
+        <h2>Kiểm tra API thông thường</h2>
+        <button onclick="testSendMail()">Gửi Email Test</button>
+        <button onclick="testForgotPassword()">Gửi Mã Xác Nhận</button>
+    </div>
+    
+    <div class="section">
+        <h2>Kiểm tra API mới</h2>
+        <button onclick="checkEmailConfig()">Kiểm tra cấu hình Email</button>
+        <button onclick="testSendDirectEmail()">Gửi Email trực tiếp</button>
+        <button onclick="testSimulatedForgotPassword()">Mô phỏng Quên mật khẩu</button>
+    </div>
+    
+    <div id="result"></div>
+    
+    <script>
+        function showResult(message, isSuccess) {
+            const resultDiv = document.getElementById('result');
+            resultDiv.innerHTML = message;
+            resultDiv.style.display = 'block';
+            resultDiv.className = isSuccess ? 'success' : 'error';
+        }
+        
+        async function testSendMail() {
+            const email = document.getElementById('email').value;
+            if (!email) {
+                showResult('Vui lòng nhập email', false);
+                return;
+            }
+            
+            try {
+                const response = await fetch(`http://localhost:8080/api/test/send-mail?to=${email}`);
+                const data = await response.json();
+                
+                showResult(`Kết quả: ${data.message || JSON.stringify(data)}`, response.ok);
+            } catch (error) {
+                showResult(`Lỗi: ${error.message}`, false);
+            }
+        }
+        
+        async function testForgotPassword() {
+            const email = document.getElementById('email').value;
+            if (!email) {
+                showResult('Vui lòng nhập email', false);
+                return;
+            }
+            
+            try {
+                const response = await fetch('http://localhost:8080/api/auth/forgot-password', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ email }),
+                });
+                
+                const data = await response.json();
+                showResult(`Kết quả: ${data.message || JSON.stringify(data)}`, response.ok);
+            } catch (error) {
+                showResult(`Lỗi: ${error.message}`, false);
+            }
+        }
+        
+        async function checkEmailConfig() {
+            try {
+                const response = await fetch('http://localhost:8080/api/test/email/info');
+                const data = await response.json();
+                showResult(`Cấu hình email: ${JSON.stringify(data)}`, response.ok);
+            } catch (error) {
+                showResult(`Lỗi: ${error.message}`, false);
+            }
+        }
+        
+        async function testSendDirectEmail() {
+            const email = document.getElementById('email').value;
+            if (!email) {
+                showResult('Vui lòng nhập email', false);
+                return;
+            }
+            
+            try {
+                const response = await fetch(`http://localhost:8080/api/test/email/send?to=${email}`);
+                const data = await response.json();
+                showResult(`Kết quả: ${data.message || JSON.stringify(data)}`, data.success);
+            } catch (error) {
+                showResult(`Lỗi: ${error.message}`, false);
+            }
+        }
+        
+        async function testSimulatedForgotPassword() {
+            const email = document.getElementById('email').value;
+            if (!email) {
+                showResult('Vui lòng nhập email', false);
+                return;
+            }
+            
+            try {
+                const response = await fetch('http://localhost:8080/api/test/email/forgot-password', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ email }),
+                });
+                
+                const data = await response.json();
+                showResult(`Kết quả: ${data.message || JSON.stringify(data)}`, data.success);
+            } catch (error) {
+                showResult(`Lỗi: ${error.message}`, false);
+            }
+        }
+    </script>
+</body>
+</html> 

@@ -1,0 +1,4 @@
+.MuiAlert-root[severity="success"] {
+    background-color: #d4edda !important;  /* ✅ Xanh lá */
+    color: #155724 !important;
+  }
