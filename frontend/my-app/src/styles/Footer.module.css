@@ -1,0 +1,295 @@
+.footer {
+  background-color: #1f2937;
+  color: #f3f4f6;
+  position: relative;
+  overflow: hidden;
+}
+
+.footer::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(to right, transparent, rgba(255, 255, 255, 0.1), transparent);
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1rem;
+  position: relative;
+}
+
+.newsletter {
+  background: linear-gradient(135deg, #4f46e5, #7c3aed);
+  padding: 4rem 0;
+  position: relative;
+  overflow: hidden;
+}
+
+.newsletter::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: url('/images/pattern.svg') center/cover;
+  opacity: 0.1;
+}
+
+.newsletterContent {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  align-items: center;
+  text-align: center;
+  position: relative;
+}
+
+@media (min-width: 768px) {
+  .newsletterContent {
+    flex-direction: row;
+    justify-content: space-between;
+    text-align: left;
+    gap: 4rem;
+  }
+}
+
+.newsletterText {
+  flex: 1;
+}
+
+.newsletterTitle {
+  font-size: 2rem;
+  font-weight: 800;
+  color: white;
+  margin-bottom: 1rem;
+  letter-spacing: -0.025em;
+}
+
+.newsletterDescription {
+  color: #f3f4f6;
+  font-size: 1.1rem;
+  line-height: 1.6;
+}
+
+.newsletterForm {
+  display: flex;
+  width: 100%;
+  max-width: 500px;
+}
+
+.newsletterInput {
+  flex: 1;
+  padding: 1rem 1.5rem;
+  border: none;
+  border-radius: 0.5rem 0 0 0.5rem;
+  outline: none;
+  font-size: 1rem;
+  background-color: rgba(255, 255, 255, 0.9);
+  transition: all 0.2s ease;
+}
+
+.newsletterInput:focus {
+  background-color: white;
+}
+
+.newsletterButton {
+  padding: 1rem 2rem;
+  background-color: #1f2937;
+  color: white;
+  border: none;
+  border-radius: 0 0.5rem 0.5rem 0;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.newsletterButton:hover {
+  background-color: #111827;
+  transform: translateY(-1px);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 4rem;
+  padding: 6rem 0;
+}
+
+@media (max-width: 1024px) {
+  .grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 3rem;
+    padding: 4rem 0;
+  }
+}
+
+@media (max-width: 640px) {
+  .grid {
+    grid-template-columns: 1fr;
+    gap: 2.5rem;
+    padding: 3rem 0;
+  }
+}
+
+.title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: white;
+  margin-bottom: 2rem;
+  position: relative;
+  padding-bottom: 0.75rem;
+}
+
+.title::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 2rem;
+  height: 2px;
+  background: linear-gradient(to right, #4f46e5, #7c3aed);
+}
+
+.description {
+  color: #9ca3af;
+  line-height: 1.7;
+  margin-bottom: 2rem;
+}
+
+.list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.listItem {
+  transition: transform 0.2s ease;
+}
+
+.listItem:hover {
+  transform: translateX(4px);
+}
+
+.link {
+  color: #9ca3af;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  display: inline-block;
+}
+
+.link:hover {
+  color: white;
+}
+
+.social {
+  display: flex;
+  gap: 1rem;
+}
+
+.socialLink {
+  color: #9ca3af;
+  transition: all 0.2s ease;
+  padding: 0.5rem;
+  border-radius: 0.5rem;
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+.socialIcon {
+  width: 1.5rem;
+  height: 1.5rem;
+}
+
+.socialLink:hover {
+  color: white;
+  background-color: rgba(255, 255, 255, 0.1);
+  transform: translateY(-2px);
+}
+
+.contactList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.contactItem {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  color: #9ca3af;
+  transition: all 0.2s ease;
+}
+
+.contactItem:hover {
+  color: white;
+}
+
+.contactIcon {
+  width: 1.25rem;
+  height: 1.25rem;
+  color: #4f46e5;
+  flex-shrink: 0;
+  margin-top: 0.25rem;
+  transition: all 0.2s ease;
+}
+
+.contactItem:hover .contactIcon {
+  color: #7c3aed;
+  transform: scale(1.1);
+}
+
+.bottom {
+  position: relative;
+  padding: 2rem 0;
+}
+
+.bottom::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(to right, transparent, rgba(255, 255, 255, 0.1), transparent);
+}
+
+.bottomContent {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 2rem;
+}
+
+.copyright {
+  color: #9ca3af;
+  font-size: 0.875rem;
+}
+
+.payments {
+  display: flex;
+  gap: 1.5rem;
+  align-items: center;
+}
+
+.paymentIcon {
+  height: 2rem;
+  width: auto;
+  opacity: 0.8;
+  transition: all 0.2s ease;
+}
+
+.paymentIcon:hover {
+  opacity: 1;
+  transform: translateY(-2px);
+} 

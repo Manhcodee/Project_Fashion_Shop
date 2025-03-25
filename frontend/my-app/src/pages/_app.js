@@ -1,12 +1,9 @@
-import { ThemeProvider, createTheme } from '@mui/material/styles';
-import CssBaseline from '@mui/material/CssBaseline';
-import theme from './themes/theme';
+import '../styles/globals.css';
+import '../styles/fixSuccess.css';
+import '../styles/forgotpassword.css';
 
-export default function App({ Component, pageProps }) {
-  return (
-    <ThemeProvider theme={theme}>
-      <CssBaseline />
-      <Component {...pageProps} />
-    </ThemeProvider>
-  );
+function MyApp({ Component, pageProps }) {
+  return <Component {...pageProps} />;
 }
+
+export default MyApp;
