@@ -1,6 +1,6 @@
 import '../styles/globals.css';
-import '../styles/fixSuccess.css';
-import '../styles/forgotpassword.css';
+// import '../styles/fixSuccess.module.css';
+// import '../styles/forgotpassword.module.css';
 
 function MyApp({ Component, pageProps }) {
   return <Component {...pageProps} />;

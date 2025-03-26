@@ -1,64 +1,89 @@
 import React from 'react';
 import Link from 'next/link';
-import { FaHeart, FaShoppingCart, FaStar } from 'react-icons/fa';
 import styles from '../../styles/ProductCard.module.css';
 
 const ProductCard = ({ product }) => {
-  const { id, title, price, image, description, rating_rate } = product;
+  if (!product) return null;
+  
+  // Kiểm tra và định dạng các trường dữ liệu
+  const title = product.title || "Sản phẩm không tên";
+  const price = product.price || 0;
+  const image = product.image || "/placeholder-image.jpg";
+  const rating = product.rating_rate || 0;
+  const ratingCount = product.rating_count || 0;
+  const id = product.id;
+
+  // Rút gọn tiêu đề nếu quá dài
+  const shortTitle = title.length > 45 ? title.substring(0, 45) + "..." : title;
+
+  // Format giá tiền
+  const formattedPrice = new Intl.NumberFormat('vi-VN', {
+    style: 'currency',
+    currency: 'VND',
+    minimumFractionDigits: 0
+  }).format(price * 23000); // Chuyển đổi USD sang VND với tỉ giá ước tính
 
   return (
-    <div className={styles.product_card}>
-      <div className={styles.image_wrapper}>
-        <img src={image} alt={title} className={styles.image} loading="lazy" />
-        <div className={styles.actions}>
-          <button className={styles.wishlist_btn} aria-label="Add to wishlist">
-            <FaHeart />
-          </button>
-          <button className={styles.cart_btn} aria-label="Add to cart">
-            <FaShoppingCart />
-          </button>
-        </div>
-        <div className={styles.discount}>
-          <span>-20%</span>
-        </div>
+    <div className={styles.productCard}>
+      <div className={styles.imageContainer}>
+        <Link href={`/product/${id}`}>
+          <img
+            src={image}
+            alt={title}
+            className={styles.productImage}
+          />
+        </Link>
+        {(product.isFeatured || product.is_featured) && (
+          <span className={styles.featuredBadge}>Nổi bật</span>
+        )}
+        {(product.isNew || product.is_new) && (
+          <span className={styles.newBadge}>Mới</span>
+        )}
       </div>
 
-      <div className={styles.content}>
-        <Link href={`/products/${id}`} className={styles.title_link}>
-          <h3 className={styles.title}>{title}</h3>
+      <div className={styles.productInfo}>
+        <Link href={`/product/${id}`} className={styles.productLink}>
+          <h3 className={styles.productTitle}>{shortTitle}</h3>
         </Link>
 
-        <div className={styles.rating}>
-          <div className={styles.stars}>
-            {[...Array(5)].map((_, index) => (
-              <FaStar
-                key={index}
-                className={`${styles.star} ${
-                  index < Math.round(rating_rate) ? styles.active : ''
-                }`}
-              />
-            ))}
+        <div className={styles.priceRating}>
+          <span className={styles.price}>{formattedPrice}</span>
+          <div className={styles.rating}>
+            <span className={styles.stars}>
+              {[...Array(5)].map((_, i) => (
+                <span
+                  key={i}
+                  className={`${styles.star} ${
+                    i < Math.round(rating) ? styles.filled : styles.empty
+                  }`}
+                >
+                  ★
+                </span>
+              ))}
+            </span>
+            <span className={styles.ratingCount}>({ratingCount})</span>
           </div>
-          <span className={styles.rating_text}>({rating_rate})</span>
         </div>
 
-        <div className={styles.price_wrapper}>
-          <div className={styles.price_group}>
-            <span className={styles.original_price}>
-              {new Intl.NumberFormat('vi-VN', {
-                style: 'currency',
-                currency: 'VND'
-              }).format(price * 23000 * 1.2)}
-            </span>
-            <span className={styles.current_price}>
-              {new Intl.NumberFormat('vi-VN', {
-                style: 'currency',
-                currency: 'VND'
-              }).format(price * 23000)}
-            </span>
-          </div>
-          <Link href={`/products/${id}`} className={styles.details_btn}>
-            Chi tiết →
+        <div className={styles.cardActions}>
+          <button className={styles.addToCartButton}>
+            <svg
+              className={styles.cartIcon}
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"
+              ></path>
+            </svg>
+            Thêm vào giỏ
+          </button>
+          <Link href={`/product/${id}`} className={styles.detailsButton}>
+            Chi tiết
           </Link>
         </div>
       </div>

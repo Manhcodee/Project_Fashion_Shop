@@ -2,6 +2,7 @@ package com.example.backend.fashion.entity.model.products;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.math.BigDecimal;
 
@@ -24,8 +25,18 @@ public class Product {
     private Integer stock;
 
     @Column(name = "rating_rate")
-    private Double rating_rate;
+    @JsonProperty("rating_rate")
+    private Double ratingRate;
 
     @Column(name = "rating_count")
-    private Integer rating_count;
+    @JsonProperty("rating_count")
+    private Integer ratingCount;
+    
+    @Column(name = "is_featured")
+    @JsonProperty("is_featured")
+    private Boolean isFeatured;
+    
+    @Column(name = "is_new")
+    @JsonProperty("is_new")
+    private Boolean isNew;
 }

@@ -38,16 +38,16 @@ const Footer = () => {
               Chúng tôi cung cấp những sản phẩm thời trang chất lượng cao với giá cả hợp lý nhất cho khách hàng.
             </p>
             <div className={styles.social}>
-              <a href="#" className={styles.socialLink}>
+              <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" className={styles.socialLink}>
                 <FaFacebook className={styles.socialIcon} />
               </a>
-              <a href="#" className={styles.socialLink}>
+              <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" className={styles.socialLink}>
                 <FaTwitter className={styles.socialIcon} />
               </a>
-              <a href="#" className={styles.socialLink}>
+              <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" className={styles.socialLink}>
                 <FaInstagram className={styles.socialIcon} />
               </a>
-              <a href="#" className={styles.socialLink}>
+              <a href="https://youtube.com" target="_blank" rel="noopener noreferrer" className={styles.socialLink}>
                 <FaYoutube className={styles.socialIcon} />
               </a>
             </div>

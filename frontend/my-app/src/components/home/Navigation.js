@@ -1,7 +1,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { FaTshirt, FaFemale, FaClock, FaMobile, FaGift, FaPercent, FaBoxOpen } from 'react-icons/fa';
-import styles from '../../styles/Header.module.css';
+import styles from '../../styles/Navigation.module.css';
 
 const Navigation = () => {
   const categories = [
@@ -14,36 +14,30 @@ const Navigation = () => {
 
   return (
     <nav className={styles.nav}>
-      <div className={styles.container}>
-        <div className="flex items-center justify-between">
-          <ul className="flex items-center">
-            {categories.map((category) => {
-              const Icon = category.icon;
-              return (
-                <li key={category.href}>
-                  <Link href={category.href} className={styles.navLink}>
-                    <Icon className={styles.navIcon} />
-                    <span>{category.name}</span>
-                  </Link>
-                </li>
-              );
-            })}
-          </ul>
-          
-          <div className="flex items-center gap-4">
-            <Link href="/sale" className={styles.navLink}>
-              <FaPercent className={styles.navIcon} />
-              <span className="text-red-600 font-medium">Sale Off 50%</span>
-            </Link>
-            <Link href="/new" className={styles.navLink}>
-              <FaBoxOpen className={styles.navIcon} />
-              <span className="text-indigo-600 font-medium">Hàng mới về</span>
-            </Link>
-          </div>
+      <div className={styles.navContainer}>
+        <ul className={styles.navList}>
+          {categories.map(({ name, href, icon: Icon }) => (
+            <li key={href}>
+              <Link href={href} className={styles.navLink}>
+                <Icon className={styles.navIcon} />
+                <span>{name}</span>
+              </Link>
+            </li>
+          ))}
+        </ul>
+        <div className={styles.navExtras}>
+          <Link href="/category/sale" className={`${styles.navLink} ${styles.sale}`}>
+            <FaPercent className={styles.navIcon} />
+            <span>Sale Off 50%</span>
+          </Link>
+          <Link href="/category/new-arrivals" className={`${styles.navLink} ${styles.newArrival}`}>
+            <FaBoxOpen className={styles.navIcon} />
+            <span>Hàng mới về</span>
+          </Link>
         </div>
       </div>
     </nav>
   );
 };
 
-export default Navigation; 
+export default Navigation;

@@ -13,6 +13,7 @@ import org.springframework.security.config.annotation.authentication.configurati
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -47,19 +48,33 @@ public class SecurityConfig {
     private JwtTokenProvider jwtTokenProvider;
 
     @Bean
+    public OAuth2UserService<OAuth2UserRequest, OAuth2User> oAuth2UserService() {
+        DefaultOAuth2UserService delegate = new DefaultOAuth2UserService();
+        return request -> {
+            OAuth2User oAuth2User = delegate.loadUser(request);
+            return oAuth2User;
+        };
+    }
+
+    @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
+                // Cho phép CORS
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
-                .csrf(csrf -> csrf.disable())
+                // Vô hiệu hóa CSRF vì chúng ta sử dụng JWT
+                .csrf(AbstractHttpConfigurer::disable)
+                // Cấu hình quyền truy cập cho các endpoint
                 .authorizeHttpRequests(auth -> auth
+                        // Cho phép truy cập không cần xác thực cho một số endpoint
                         .requestMatchers("/api/products/**").permitAll()
+                        .requestMatchers("/public/api/**").permitAll()
                         .requestMatchers("/api/auth/**").permitAll()
-                        .requestMatchers("/oauth2/**", "/login/oauth2/**", "/ws/**", "/topic/**",
-                                "/app/**")
-                        .permitAll()
+                        .requestMatchers("/oauth2/**", "/login/oauth2/**", "/ws/**", "/topic/**", "/app/**").permitAll()
                         .requestMatchers("/api/test/**").permitAll()
                         .requestMatchers("/", "/login", "/sign-in").permitAll()
+                        // Yêu cầu xác thực cho tất cả các endpoint khác
                         .anyRequest().authenticated())
+                // Cấu hình OAuth2 login
                 .oauth2Login(oauth2 -> oauth2
                         .loginPage("http://localhost:3000/sign-in")
                         .defaultSuccessUrl("http://localhost:3000/dashboard", true)
@@ -85,14 +100,18 @@ public class SecurityConfig {
                                     exception.getMessage());
                             response.sendRedirect(redirectUrl);
                         }))
+                // Cấu hình logout
                 .logout(logout -> logout
                         .logoutSuccessUrl("http://localhost:3000/")
                         .permitAll())
+                // Cấu hình xử lý lỗi xác thực
                 .exceptionHandling(exception -> exception
                         .authenticationEntryPoint(authenticationEntryPoint))
+                // Cấu hình quản lý phiên làm việc (stateless vì chúng ta sử dụng JWT)
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
+        // Đặt filter JWT trước UsernamePasswordAuthenticationFilter
         http.addFilterBefore(authenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
@@ -106,12 +125,14 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(Arrays.asList(
-                "http://localhost:3000",
-                "http://127.0.0.1:3000",
-                "http://localhost:8080",
-                "http://127.0.0.1:8080"));
+        
+        // Cho phép tất cả các origin
+        configuration.setAllowedOrigins(Arrays.asList("*"));
+        
+        // Cho phép tất cả các HTTP methods
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
+        
+        // Cho phép tất cả headers
         configuration.setAllowedHeaders(Arrays.asList(
                 "Authorization",
                 "Content-Type",
@@ -123,12 +144,18 @@ public class SecurityConfig {
                 "Access-Control-Allow-Methods",
                 "Access-Control-Allow-Credentials",
                 "X-XSRF-TOKEN"));
+        
+        // Expose headers
         configuration.setExposedHeaders(Arrays.asList(
                 "Authorization",
                 "Access-Control-Allow-Origin",
                 "Access-Control-Allow-Credentials",
                 "X-XSRF-TOKEN"));
-        configuration.setAllowCredentials(true);
+        
+        // Không gửi credentials
+        configuration.setAllowCredentials(false);
+        
+        // Cache CORS response
         configuration.setMaxAge(3600L);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
@@ -139,47 +166,5 @@ public class SecurityConfig {
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
-    }
-
-    @Bean
-    public OAuth2UserService<OAuth2UserRequest, OAuth2User> oAuth2UserService() {
-        DefaultOAuth2UserService delegate = new DefaultOAuth2UserService();
-        return (userRequest) -> {
-            OAuth2User oAuth2User = delegate.loadUser(userRequest);
-            String registrationId = userRequest.getClientRegistration().getRegistrationId();
-
-            // Xử lý thông tin user từ OAuth2
-            Map<String, Object> attributes = oAuth2User.getAttributes();
-            String email = (String) attributes.get("email");
-            String name = (String) attributes.get("name");
-
-            // Tìm hoặc tạo user
-            Optional<User> existingUser = userRepository.findByEmail(email);
-            User user;
-
-            if (existingUser.isPresent()) {
-                user = existingUser.get();
-            } else {
-                user = new User();
-                user.setEmail(email);
-                user.setFullName(name);
-                user.setEnabled(true);
-
-                if ("facebook".equals(registrationId)) {
-                    user.setFacebookId((String) attributes.get("id"));
-                    if (attributes.containsKey("picture")) {
-                        @SuppressWarnings("unchecked")
-                        Map<String, Object> picture = (Map<String, Object>) attributes.get("picture");
-                        @SuppressWarnings("unchecked")
-                        Map<String, Object> data = (Map<String, Object>) picture.get("data");
-                        user.setProfilePicture((String) data.get("url"));
-                    }
-                }
-
-                userRepository.save(user);
-            }
-
-            return oAuth2User;
-        };
     }
 }

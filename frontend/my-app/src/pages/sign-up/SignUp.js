@@ -18,7 +18,7 @@ import AppTheme from '../shared-theme/AppTheme';
 import ColorModeSelect from '../shared-theme/ColorModeSelect';
 import { GoogleIcon, FacebookIcon } from '../sign-in/components/CustomIcons';
 import FilterVintageIcon from '@mui/icons-material/FilterVintage';
-import '../../styles/fixSuccess.css';
+import '../../styles/fixSuccess.module.css';
 
 const Card = styled(MuiCard)(({ theme }) => ({
   display: 'flex',

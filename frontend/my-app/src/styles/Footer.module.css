@@ -1,295 +1,170 @@
+/* ===== Footer.module.css ===== */
+
 .footer {
   background-color: #1f2937;
-  color: #f3f4f6;
-  position: relative;
-  overflow: hidden;
-}
-
-.footer::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 1px;
-  background: linear-gradient(to right, transparent, rgba(255, 255, 255, 0.1), transparent);
+  color: #f9fafb;
+  font-size: 14px;
+  padding-top: 2rem;
 }
 
 .container {
-  max-width: 1200px;
+  max-width: 1400px;
   margin: 0 auto;
   padding: 0 1rem;
-  position: relative;
 }
 
 .newsletter {
-  background: linear-gradient(135deg, #4f46e5, #7c3aed);
-  padding: 4rem 0;
-  position: relative;
-  overflow: hidden;
-}
-
-.newsletter::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: url('/images/pattern.svg') center/cover;
-  opacity: 0.1;
+  background-color: #111827;
+  padding: 2rem 0;
 }
 
 .newsletterContent {
   display: flex;
   flex-direction: column;
-  gap: 2rem;
+  gap: 1rem;
+  justify-content: space-between;
   align-items: center;
   text-align: center;
-  position: relative;
 }
 
-@media (min-width: 768px) {
+@media(min-width: 768px) {
   .newsletterContent {
     flex-direction: row;
-    justify-content: space-between;
     text-align: left;
-    gap: 4rem;
   }
 }
 
-.newsletterText {
-  flex: 1;
-}
-
 .newsletterTitle {
-  font-size: 2rem;
-  font-weight: 800;
-  color: white;
-  margin-bottom: 1rem;
-  letter-spacing: -0.025em;
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #fbbf24;
 }
 
 .newsletterDescription {
-  color: #f3f4f6;
-  font-size: 1.1rem;
-  line-height: 1.6;
-}
-
-.newsletterForm {
-  display: flex;
-  width: 100%;
-  max-width: 500px;
+  color: #d1d5db;
+  font-size: 0.875rem;
 }
 
 .newsletterInput {
-  flex: 1;
-  padding: 1rem 1.5rem;
+  padding: 0.5rem 1rem;
   border: none;
   border-radius: 0.5rem 0 0 0.5rem;
   outline: none;
-  font-size: 1rem;
-  background-color: rgba(255, 255, 255, 0.9);
-  transition: all 0.2s ease;
-}
-
-.newsletterInput:focus {
-  background-color: white;
+  min-width: 240px;
 }
 
 .newsletterButton {
-  padding: 1rem 2rem;
-  background-color: #1f2937;
-  color: white;
+  background-color: #fbbf24;
+  color: #1f2937;
+  padding: 0.5rem 1rem;
+  font-weight: 600;
   border: none;
   border-radius: 0 0.5rem 0.5rem 0;
-  font-weight: 600;
   cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.newsletterButton:hover {
-  background-color: #111827;
-  transform: translateY(-1px);
 }
 
 .grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 4rem;
-  padding: 6rem 0;
-}
-
-@media (max-width: 1024px) {
-  .grid {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 3rem;
-    padding: 4rem 0;
-  }
-}
-
-@media (max-width: 640px) {
-  .grid {
-    grid-template-columns: 1fr;
-    gap: 2.5rem;
-    padding: 3rem 0;
-  }
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 2rem;
+  padding: 3rem 0;
 }
 
 .title {
-  font-size: 1.25rem;
-  font-weight: 700;
-  color: white;
-  margin-bottom: 2rem;
-  position: relative;
-  padding-bottom: 0.75rem;
-}
-
-.title::after {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 2rem;
-  height: 2px;
-  background: linear-gradient(to right, #4f46e5, #7c3aed);
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  color: #fbbf24;
 }
 
 .description {
-  color: #9ca3af;
-  line-height: 1.7;
-  margin-bottom: 2rem;
+  color: #d1d5db;
+  line-height: 1.6;
+}
+
+.social {
+  display: flex;
+  gap: 0.75rem;
+  margin-top: 1rem;
+}
+
+.socialLink {
+  color: #fbbf24;
+  font-size: 1.25rem;
+  transition: transform 0.2s ease;
+}
+
+.socialLink:hover {
+  transform: scale(1.1);
 }
 
 .list {
   list-style: none;
   padding: 0;
   margin: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
 }
 
 .listItem {
-  transition: transform 0.2s ease;
-}
-
-.listItem:hover {
-  transform: translateX(4px);
+  margin-bottom: 0.5rem;
 }
 
 .link {
-  color: #9ca3af;
+  color: #d1d5db;
   text-decoration: none;
-  transition: all 0.2s ease;
-  display: inline-block;
+  transition: color 0.2s ease;
 }
 
 .link:hover {
-  color: white;
-}
-
-.social {
-  display: flex;
-  gap: 1rem;
-}
-
-.socialLink {
-  color: #9ca3af;
-  transition: all 0.2s ease;
-  padding: 0.5rem;
-  border-radius: 0.5rem;
-  background-color: rgba(255, 255, 255, 0.05);
-}
-
-.socialIcon {
-  width: 1.5rem;
-  height: 1.5rem;
-}
-
-.socialLink:hover {
-  color: white;
-  background-color: rgba(255, 255, 255, 0.1);
-  transform: translateY(-2px);
+  color: #fbbf24;
 }
 
 .contactList {
   list-style: none;
   padding: 0;
   margin: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 1.25rem;
 }
 
 .contactItem {
   display: flex;
   align-items: flex-start;
-  gap: 1rem;
-  color: #9ca3af;
-  transition: all 0.2s ease;
-}
-
-.contactItem:hover {
-  color: white;
+  gap: 0.75rem;
+  margin-bottom: 0.75rem;
+  color: #d1d5db;
 }
 
 .contactIcon {
-  width: 1.25rem;
-  height: 1.25rem;
-  color: #4f46e5;
-  flex-shrink: 0;
-  margin-top: 0.25rem;
-  transition: all 0.2s ease;
-}
-
-.contactItem:hover .contactIcon {
-  color: #7c3aed;
-  transform: scale(1.1);
+  font-size: 1rem;
+  margin-top: 0.15rem;
+  color: #fbbf24;
 }
 
 .bottom {
-  position: relative;
-  padding: 2rem 0;
-}
-
-.bottom::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 1px;
-  background: linear-gradient(to right, transparent, rgba(255, 255, 255, 0.1), transparent);
+  background-color: #111827;
+  padding: 1rem 0;
+  font-size: 0.875rem;
 }
 
 .bottomContent {
   display: flex;
-  justify-content: space-between;
+  flex-direction: column;
   align-items: center;
-  flex-wrap: wrap;
-  gap: 2rem;
+  justify-content: space-between;
+  gap: 1rem;
 }
 
-.copyright {
-  color: #9ca3af;
-  font-size: 0.875rem;
+@media(min-width: 768px) {
+  .bottomContent {
+    flex-direction: row;
+  }
 }
 
 .payments {
   display: flex;
-  gap: 1.5rem;
-  align-items: center;
+  gap: 1rem;
 }
 
 .paymentIcon {
-  height: 2rem;
+  height: 24px;
   width: auto;
-  opacity: 0.8;
-  transition: all 0.2s ease;
+  object-fit: contain;
 }
-
-.paymentIcon:hover {
-  opacity: 1;
-  transform: translateY(-2px);
-} 
