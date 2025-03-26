@@ -1,47 +1,37 @@
 package com.example.backend.fashion.controller.auth;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import java.util.Map;
-import java.util.UUID;
 
-import com.example.backend.fashion.dto.auth.ForgotPasswordRequest;
-import com.example.backend.fashion.dto.auth.RegisterRequest;
-import com.example.backend.fashion.dto.auth.ResetPasswordRequest;
-import com.example.backend.fashion.dto.auth.VerifyCodeRequest;
+import com.example.backend.fashion.dto.auth.*;
 import com.example.backend.fashion.service.auth.AuthService;
-import com.example.backend.fashion.service.login.PasswordResetService;
-import com.example.backend.fashion.dto.login.JwtAuthResponse;    
-import com.example.backend.fashion.dto.login.LoginDto;
+import com.example.backend.fashion.service.email.EmailService;
 import com.example.backend.fashion.entity.model.user.User;
-import com.example.backend.fashion.entity.enums.Role;
 import com.example.backend.fashion.repository.user.UserRepository;
 import com.example.backend.fashion.security.JwtTokenProvider;
+import com.example.backend.fashion.entity.enums.Role;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
 
 @RestController
 @RequestMapping("/api/auth")
 @RequiredArgsConstructor
-@CrossOrigin(origins = "*")
+@CrossOrigin(origins = "http://localhost:3000")
 public class AuthController {
     @Autowired
     private AuthService authService;
-    
+
     @Autowired
-    private PasswordResetService passwordResetService;
-    
+    private EmailService emailService;
+
     @Autowired
     private UserRepository userRepository;
-    
+
     @Autowired
     private JwtTokenProvider jwtTokenProvider;
 
@@ -51,7 +41,7 @@ public class AuthController {
     @PostMapping("/register")
     public ResponseEntity<?> register(@Valid @RequestBody RegisterRequest request) {
         authService.register(request);
-        return ResponseEntity.ok().body(Map.of("message", "Đăng ký thành công"));
+        return ResponseEntity.ok().body(new MessageResponse("Đăng ký thành công"));
     }
 
     @PostMapping("/login")
@@ -59,37 +49,67 @@ public class AuthController {
         JwtAuthResponse response = authService.login(loginDto);
         return ResponseEntity.ok(response);
     }
-    
+
+    @PostMapping("/send-verification")
+    public ResponseEntity<?> sendVerificationCode(@RequestBody EmailRequest request) {
+        try {
+            authService.sendVerificationCode(request.getEmail());
+            return ResponseEntity.ok(new MessageResponse("Mã xác thực đã được gửi đến email của bạn"));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(new MessageResponse(e.getMessage()));
+        }
+    }
+
+    @PostMapping("/verify-email")
+    public ResponseEntity<?> verifyEmail(@RequestBody VerifyEmailRequest request) {
+        try {
+            authService.verifyEmail(request.getEmail(), request.getCode());
+            return ResponseEntity.ok(new MessageResponse("Email đã được xác thực thành công"));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(new MessageResponse(e.getMessage()));
+        }
+    }
+
+    @PostMapping("/resend-verification")
+    public ResponseEntity<?> resendVerificationCode(@RequestBody EmailRequest request) {
+        try {
+            authService.resendVerificationCode(request.getEmail());
+            return ResponseEntity.ok(new MessageResponse("Mã xác thực mới đã được gửi đến email của bạn"));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(new MessageResponse(e.getMessage()));
+        }
+    }
+
     @PostMapping("/forgot-password")
     public ResponseEntity<?> forgotPassword(@RequestBody ForgotPasswordRequest request) {
         try {
-            passwordResetService.sendVerificationCode(request.getEmail());
-            return ResponseEntity.ok().body(Map.of("message", "Mã xác nhận đã được gửi đến email của bạn"));
+            authService.sendVerificationCode(request.getEmail());
+            return ResponseEntity.ok(new MessageResponse("Mã xác nhận đã được gửi đến email của bạn"));
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body(Map.of("message", e.getMessage()));
+            return ResponseEntity.badRequest().body(new MessageResponse(e.getMessage()));
         }
     }
-    
+
     @PostMapping("/verify-code")
     public ResponseEntity<?> verifyCode(@RequestBody VerifyCodeRequest request) {
         try {
-            boolean isValid = passwordResetService.verifyCode(request.getEmail(), request.getCode());
+            boolean isValid = authService.verifyCode(request.getEmail(), request.getCode());
             return ResponseEntity.ok().body(Map.of("valid", isValid, "message", "Mã xác nhận hợp lệ"));
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body(Map.of("message", e.getMessage()));
+            return ResponseEntity.badRequest().body(new MessageResponse(e.getMessage()));
         }
     }
-    
+
     @PostMapping("/reset-password")
     public ResponseEntity<?> resetPassword(@RequestBody ResetPasswordRequest request) {
         try {
-            passwordResetService.resetPassword(request.getEmail(), request.getCode(), request.getNewPassword());
-            return ResponseEntity.ok().body(Map.of("message", "Mật khẩu đã được đặt lại thành công"));
+            authService.resetPassword(request.getEmail(), request.getCode(), request.getNewPassword());
+            return ResponseEntity.ok(new MessageResponse("Mật khẩu đã được đặt lại thành công"));
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body(Map.of("message", e.getMessage()));
+            return ResponseEntity.badRequest().body(new MessageResponse(e.getMessage()));
         }
     }
-    
+
     @PostMapping("/google-login")
     public ResponseEntity<?> handleGoogleLogin(@RequestBody Map<String, String> request) {
         try {
@@ -98,18 +118,15 @@ public class AuthController {
             String picture = request.get("picture");
             String googleId = request.get("googleId");
 
-            // Kiểm tra email (bắt buộc)
             if (email == null || email.isEmpty()) {
                 return ResponseEntity.badRequest()
-                    .body(Map.of("message", "Email không được để trống"));
+                        .body(new MessageResponse("Email không được để trống"));
             }
 
-            // Đảm bảo fullName không null
             if (fullName == null || fullName.isEmpty()) {
-                fullName = email.split("@")[0]; // Sử dụng phần đầu của email làm tên
+                fullName = email.split("@")[0];
             }
 
-            // Tìm user theo email hoặc googleId
             User user = userRepository.findByEmail(email)
                     .orElseGet(() -> {
                         if (googleId != null) {
@@ -119,63 +136,56 @@ public class AuthController {
                     });
 
             if (user == null) {
-                // Tạo user mới
                 user = new User();
                 user.setEmail(email);
                 user.setFullName(fullName);
                 user.setGoogleId(googleId);
                 user.setProfilePicture(picture);
-                // Tạo mật khẩu ngẫu nhiên
-                String randomPassword = UUID.randomUUID().toString();
+                String randomPassword = java.util.UUID.randomUUID().toString();
                 user.setPassword(passwordEncoder.encode(randomPassword));
                 user.setRole(Role.USER);
                 user.setEnabled(true);
                 user = userRepository.save(user);
             } else {
-                // Cập nhật thông tin nếu cần
                 boolean needsUpdate = false;
-                
+
                 if (user.getFullName() == null || user.getFullName().isEmpty()) {
                     user.setFullName(fullName);
                     needsUpdate = true;
                 }
-                
+
                 if (googleId != null && user.getGoogleId() == null) {
                     user.setGoogleId(googleId);
                     needsUpdate = true;
                 }
-                
+
                 if (picture != null && user.getProfilePicture() == null) {
                     user.setProfilePicture(picture);
                     needsUpdate = true;
                 }
-                
+
                 if (needsUpdate) {
                     user = userRepository.save(user);
                 }
             }
 
-            // Tạo JWT token
             String token = jwtTokenProvider.generateToken(user.getEmail());
 
-            // Trả về response
             return ResponseEntity.ok(Map.of(
-                "accessToken", token,
-                "email", user.getEmail(),
-                "fullName", user.getFullName(),
-                "role", user.getRole().toString(),
-                "picture", user.getProfilePicture() != null ? user.getProfilePicture() : ""
-            ));
+                    "accessToken", token,
+                    "email", user.getEmail(),
+                    "fullName", user.getFullName(),
+                    "role", user.getRole().toString(),
+                    "picture", user.getProfilePicture() != null ? user.getProfilePicture() : ""));
 
         } catch (Exception e) {
             return ResponseEntity.badRequest()
-                .body(Map.of("message", "Đăng nhập Google thất bại: " + e.getMessage()));
+                    .body(new MessageResponse("Đăng nhập Google thất bại: " + e.getMessage()));
         }
     }
-    
-    // Endpoint kiểm tra kết nối
+
     @GetMapping("/ping")
     public ResponseEntity<?> ping() {
-        return ResponseEntity.ok().body(Map.of("status", "online", "message", "Kết nối đến máy chủ thành công"));
+        return ResponseEntity.ok(new MessageResponse("Kết nối đến máy chủ thành công"));
     }
-} 
+}

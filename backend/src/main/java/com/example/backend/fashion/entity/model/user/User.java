@@ -19,6 +19,7 @@ import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
 
 import com.example.backend.fashion.entity.enums.Role;
+import com.example.backend.fashion.entity.enums.AuthProvider;
 
 @Entity
 @Table(name = "users")
@@ -36,9 +37,9 @@ public class User {
     @Column(unique = true, nullable = false)
     private String email;
 
-    @JsonIgnore  // Không trả về trong API response
+    @JsonIgnore // Không trả về trong API response
     @Column(nullable = false)
-    private String password;  // Vẫn bắt buộc nhưng không bị lộ ra ngoài API
+    private String password; // Vẫn bắt buộc nhưng không bị lộ ra ngoài API
 
     @Column(unique = true, nullable = true)
     private String phone;
@@ -46,10 +47,10 @@ public class User {
     private String address;
 
     @Column(name = "google_id", unique = true, nullable = true)
-    private String googleId;  // Chỉ có khi đăng nhập Google
+    private String googleId; // Chỉ có khi đăng nhập Google
 
     @Column(name = "facebook_id", unique = true, nullable = true)
-    private String facebookId;  // Chỉ có khi đăng nhập Facebook
+    private String facebookId; // Chỉ có khi đăng nhập Facebook
 
     @Column(name = "profile_picture")
     private String profilePicture;
@@ -57,9 +58,22 @@ public class User {
     @Column(name = "is_enabled")
     private boolean isEnabled = false;
 
+    @Column(name = "is_verified")
+    private boolean isVerified = false;
+
+    @Column(name = "verification_code")
+    private String verificationCode;
+
+    @Column(name = "verification_code_expiry")
+    private LocalDateTime verificationCodeExpiry;
+
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Role role = Role.USER;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "auth_provider", nullable = false)
+    private AuthProvider authProvider = AuthProvider.LOCAL;
 
     @Column(name = "created_at")
     private LocalDateTime createdAt;
@@ -71,7 +85,8 @@ public class User {
     protected void onCreate() {
         createdAt = LocalDateTime.now();
         if (googleId != null) {
-            isEnabled = true; // Tự động kích hoạt tài khoản Google
+            isEnabled = true;
+            isVerified = true;
         }
     }
 

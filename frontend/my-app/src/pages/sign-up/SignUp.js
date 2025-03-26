@@ -89,6 +89,7 @@ export default function SignUp(props) {
   const [apiError, setApiError] = React.useState('');
   const [apiSuccess, setApiSuccess] = React.useState('');
   const [loading, setLoading] = React.useState(false);
+  const [verificationSent, setVerificationSent] = React.useState(false);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -157,6 +158,7 @@ export default function SignUp(props) {
     // Reset thông báo
     setApiError('');
     setApiSuccess('');
+    setVerificationSent(false);
   
     // Kiểm tra hợp lệ
     if (!validateForm()) return;
@@ -204,21 +206,26 @@ export default function SignUp(props) {
         const data = await response.json();
         if (!response.ok) {
           errorMessage = data.message || errorMessage;
-          setApiError(errorMessage); // ✅ Không throw nữa
+          setApiError(errorMessage);
           return;
+        }
+        
+        // Xử lý phản hồi thành công
+        if (isEmailInput) {
+          setVerificationSent(true);
+          setApiSuccess('Đăng ký thành công! Vui lòng kiểm tra email của bạn để xác thực tài khoản.');
+        } else {
+          setApiSuccess('Đăng ký thành công! Chuyển hướng đến trang đăng nhập...');
+          setTimeout(() => router.push('/sign-in'), 2000);
         }
       } else {
         const text = await response.text();
         if (!response.ok) {
           errorMessage = text || errorMessage;
-          setApiError(errorMessage); // ✅ Không throw nữa
+          setApiError(errorMessage);
           return;
         }
       }
-  
-      // Thành công
-      setApiSuccess('Đăng ký thành công! Chuyển hướng đến trang đăng nhập...');
-      setTimeout(() => router.push('/sign-in'), 2000);
   
     } catch (err) {
       console.error('Lỗi không xác định:', err);
@@ -286,6 +293,25 @@ export default function SignUp(props) {
           {apiSuccess && (
             <Alert severity="success" sx={{ width: '100%' }}>
               {apiSuccess}
+            </Alert>
+          )}
+
+          {/* Hiển thị thông báo xác thực email */}
+          {verificationSent && (
+            <Alert 
+              severity="info" 
+              sx={{ width: '100%' }}
+              action={
+                <Button 
+                  color="inherit" 
+                  size="small"
+                  onClick={() => router.push('/sign-in')}
+                >
+                  ĐẾN TRANG ĐĂNG NHẬP
+                </Button>
+              }
+            >
+              Vui lòng kiểm tra email của bạn để xác thực tài khoản. Sau khi xác thực, bạn có thể đăng nhập.
             </Alert>
           )}
           
