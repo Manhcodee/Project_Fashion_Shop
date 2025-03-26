@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import Link from 'next/link';
 import Header from "../components/home/Header";
 import Navigation from "../components/home/Navigation";
 import ProductCard from "../components/home/ProductCard";
@@ -17,7 +18,7 @@ export default function Home() {
   // Phân trang
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
-  const productsPerPage = 8; // Số sản phẩm mỗi trang
+  const productsPerPage = 8;
   
   // Sắp xếp
   const [sortOption, setSortOption] = useState('newest');
@@ -27,33 +28,33 @@ export default function Home() {
     const fetchData = async () => {
       try {
         setLoading(true);
-        // Lấy dữ liệu từ API với API service mới
-        const [allProducts, featuredProducts, newProductsData] = await Promise.all([
-          api.getAllProducts(),
-          api.getFeaturedProducts(),
-          api.getNewProducts()
-        ]);
+        const response = await fetch('/api/products');
         
-        console.log('Tất cả sản phẩm:', allProducts);
-        console.log('Sản phẩm nổi bật:', featuredProducts);
-        console.log('Sản phẩm mới:', newProductsData);
-        
-        if (!allProducts || !Array.isArray(allProducts)) {
-          console.error('Lỗi: API không trả về mảng sản phẩm hợp lệ');
-          throw new Error('Dữ liệu sản phẩm không hợp lệ');
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
         }
         
+        const data = await response.json();
+        
+        if (!data || !Array.isArray(data)) {
+          throw new Error('Dữ liệu không hợp lệ');
+        }
+
+        console.log('Dữ liệu sản phẩm:', data); // Log để debug
+
         // Xử lý dữ liệu sản phẩm
-        setProducts(allProducts);
-        setBestSellers(Array.isArray(featuredProducts) && featuredProducts.length > 0 
-          ? featuredProducts 
-          : allProducts.slice(0, 4));
-        setNewProducts(Array.isArray(newProductsData) && newProductsData.length > 0 
-          ? newProductsData 
-          : allProducts.slice(0, 4));
+        setProducts(data);
+        
+        // Lọc sản phẩm nổi bật
+        const featured = data.filter(product => product.is_featured === 1);
+        setBestSellers(featured.length > 0 ? featured : data.slice(0, 4));
+        
+        // Lọc sản phẩm mới
+        const newItems = data.filter(product => product.is_new === 1);
+        setNewProducts(newItems.length > 0 ? newItems : data.slice(0, 4));
         
         // Tính tổng số trang
-        setTotalPages(Math.ceil(allProducts.length / productsPerPage));
+        setTotalPages(Math.ceil(data.length / productsPerPage));
         
         setLoading(false);
       } catch (err) {
@@ -65,60 +66,47 @@ export default function Home() {
 
     fetchData();
   }, []);
-  
-  // Áp dụng sắp xếp và cập nhật hiển thị sản phẩm khi products hoặc sortOption thay đổi
+
+  // Xử lý sắp xếp sản phẩm
   useEffect(() => {
-    if (!products || products.length === 0) return;
+    if (!products.length) return;
     
-    // Clone array để không ảnh hưởng đến dữ liệu gốc
     let sortedProducts = [...products];
     
-    // Sắp xếp theo lựa chọn
     switch (sortOption) {
       case 'price-asc':
-        sortedProducts.sort((a, b) => a.price - b.price);
+        sortedProducts.sort((a, b) => parseFloat(a.price) - parseFloat(b.price));
         break;
       case 'price-desc':
-        sortedProducts.sort((a, b) => b.price - a.price);
+        sortedProducts.sort((a, b) => parseFloat(b.price) - parseFloat(a.price));
         break;
       case 'rating-desc':
-        sortedProducts.sort((a, b) => (b.rating_rate || 0) - (a.rating_rate || 0));
+        sortedProducts.sort((a, b) => parseFloat(b.rating_rate || 0) - parseFloat(a.rating_rate || 0));
         break;
       case 'newest':
       default:
-        // Mặc định là mới nhất (theo ID)
         sortedProducts.sort((a, b) => b.id - a.id);
         break;
     }
     
     setDisplayProducts(sortedProducts);
-    // Reset về trang đầu tiên khi thay đổi sắp xếp
     setCurrentPage(1);
   }, [products, sortOption]);
-  
-  // Xử lý thay đổi trang
+
   const handlePageChange = (pageNumber) => {
     setCurrentPage(pageNumber);
-    // Cuộn lên đầu phần sản phẩm
     document.getElementById('all-products').scrollIntoView({ behavior: 'smooth' });
   };
-  
-  // Xử lý thay đổi sắp xếp
+
   const handleSortChange = (e) => {
     setSortOption(e.target.value);
   };
-  
-  // Lấy sản phẩm cho trang hiện tại
+
   const getCurrentPageProducts = () => {
-    if (!displayProducts || displayProducts.length === 0) return [];
-    
     const indexOfLastProduct = currentPage * productsPerPage;
     const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
     return displayProducts.slice(indexOfFirstProduct, indexOfLastProduct);
   };
-  
-  // Kiểm tra xem mảng có phần tử không
-  const hasItems = (arr) => Array.isArray(arr) && arr.length > 0;
 
   if (loading) {
     return (
@@ -198,20 +186,20 @@ export default function Home() {
         </section>
 
         {/* Best Sellers Section */}
-        {hasItems(bestSellers) && (
+        {bestSellers.length > 0 && (
           <section className="mb-16">
             <div className={styles.sectionWrapper}>
-              <div className={styles.bestSellerHeader}>
+              <div className={styles.sectionHeader}>
                 <div>
                   <h2 className={styles.sectionTitle}>Sản phẩm bán chạy</h2>
                   <p className={styles.sectionSubtitle}>
                     Những sản phẩm được yêu thích nhất
                   </p>
                 </div>
-                <a href="/category/featured" className={styles.viewAllLink}>
+                <Link href="/category/featured" className={styles.viewAllLink}>
                   Xem tất cả
                   <svg
-                    className={`w-5 h-5 ml-2 ${styles.arrowIcon}`}
+                    className={styles.arrowIcon}
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -223,10 +211,10 @@ export default function Home() {
                       d="M9 5l7 7-7 7"
                     />
                   </svg>
-                </a>
+                </Link>
               </div>
               <div className={styles.productGrid}>
-                {bestSellers.slice(0, 4).map((product) => (
+                {bestSellers.map((product) => (
                   <ProductCard key={product.id} product={product} />
                 ))}
               </div>
@@ -235,20 +223,20 @@ export default function Home() {
         )}
 
         {/* New Products Section */}
-        {hasItems(newProducts) && (
+        {newProducts.length > 0 && (
           <section className="mb-16">
             <div className={styles.sectionWrapper}>
-              <div className={styles.bestSellerHeader}>
+              <div className={styles.sectionHeader}>
                 <div>
                   <h2 className={styles.sectionTitle}>Sản phẩm mới</h2>
                   <p className={styles.sectionSubtitle}>
                     Những sản phẩm mới nhất của chúng tôi
                   </p>
                 </div>
-                <a href="/category/new-arrivals" className={styles.viewAllLink}>
+                <Link href="/category/new-arrivals" className={styles.viewAllLink}>
                   Xem tất cả
                   <svg
-                    className={`w-5 h-5 ml-2 ${styles.arrowIcon}`}
+                    className={styles.arrowIcon}
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -260,10 +248,10 @@ export default function Home() {
                       d="M9 5l7 7-7 7"
                     />
                   </svg>
-                </a>
+                </Link>
               </div>
               <div className={styles.productGrid}>
-                {newProducts.slice(0, 4).map((product) => (
+                {newProducts.map((product) => (
                   <ProductCard key={product.id} product={product} />
                 ))}
               </div>
@@ -272,8 +260,8 @@ export default function Home() {
         )}
 
         {/* All Products Section */}
-        <section id="all-products" className={`mb-16 ${styles.allProductsSection}`}>
-          <div className={styles.bestSellerHeader}>
+        <section id="all-products" className={styles.allProductsSection}>
+          <div className={styles.sectionHeader}>
             <div>
               <h2 className={styles.sectionTitle}>Tất cả sản phẩm</h2>
               <p className={styles.sectionSubtitle}>
@@ -282,7 +270,7 @@ export default function Home() {
             </div>
             <div className={styles.filterBar}>
               <select 
-                className="form-select rounded-lg border-gray-200 focus:border-indigo-500 focus:ring-indigo-500 w-48 bg-white shadow-sm"
+                className={styles.sortSelect}
                 value={sortOption}
                 onChange={handleSortChange}
               >
@@ -294,31 +282,31 @@ export default function Home() {
             </div>
           </div>
 
-          {hasItems(getCurrentPageProducts()) ? (
-            <div className={styles.productGrid}>
-              {getCurrentPageProducts().map((product) => (
-                <ProductCard key={product.id} product={product} />
-              ))}
-            </div>
+          {getCurrentPageProducts().length > 0 ? (
+            <>
+              <div className={styles.productGrid}>
+                {getCurrentPageProducts().map((product) => (
+                  <ProductCard key={product.id} product={product} />
+                ))}
+              </div>
+              {totalPages > 1 && (
+                <Pagination 
+                  currentPage={currentPage}
+                  totalPages={totalPages}
+                  onPageChange={handlePageChange}
+                />
+              )}
+            </>
           ) : (
-            <div className="text-center py-20">
-              <div className="text-gray-500">
-                <svg className="mx-auto h-12 w-12" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+            <div className={styles.noProducts}>
+              <div className={styles.noProductsContent}>
+                <svg className={styles.noProductsIcon} fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
-                <h3 className="mt-2 text-sm font-medium text-gray-900">Không có sản phẩm nào</h3>
-                <p className="mt-1 text-sm text-gray-500">Chúng tôi chưa có sản phẩm nào trong danh mục này.</p>
+                <h3 className={styles.noProductsTitle}>Không có sản phẩm nào</h3>
+                <p className={styles.noProductsText}>Chúng tôi chưa có sản phẩm nào trong danh mục này.</p>
               </div>
             </div>
-          )}
-          
-          {/* Phân trang */}
-          {totalPages > 1 && (
-            <Pagination 
-              currentPage={currentPage}
-              totalPages={totalPages}
-              onPageChange={handlePageChange}
-            />
           )}
         </section>
       </main>

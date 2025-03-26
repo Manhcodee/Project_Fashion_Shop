@@ -7,10 +7,10 @@ const ProductCard = ({ product }) => {
   
   // Kiểm tra và định dạng các trường dữ liệu
   const title = product.title || "Sản phẩm không tên";
-  const price = product.price || 0;
+  const price = parseFloat(product.price) || 0;
   const image = product.image || "/placeholder-image.jpg";
-  const rating = product.rating_rate || 0;
-  const ratingCount = product.rating_count || 0;
+  const rating = parseFloat(product.rating_rate) || 0;
+  const ratingCount = parseInt(product.rating_count) || 0;
   const id = product.id;
 
   // Rút gọn tiêu đề nếu quá dài
@@ -20,8 +20,9 @@ const ProductCard = ({ product }) => {
   const formattedPrice = new Intl.NumberFormat('vi-VN', {
     style: 'currency',
     currency: 'VND',
-    minimumFractionDigits: 0
-  }).format(price * 23000); // Chuyển đổi USD sang VND với tỉ giá ước tính
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0
+  }).format(price * 23000); // Chuyển đổi USD sang VND
 
   return (
     <div className={styles.productCard}>
@@ -31,12 +32,13 @@ const ProductCard = ({ product }) => {
             src={image}
             alt={title}
             className={styles.productImage}
+            loading="lazy"
           />
         </Link>
-        {(product.isFeatured || product.is_featured) && (
+        {product.is_featured === 1 && (
           <span className={styles.featuredBadge}>Nổi bật</span>
         )}
-        {(product.isNew || product.is_new) && (
+        {product.is_new === 1 && (
           <span className={styles.newBadge}>Mới</span>
         )}
       </div>
@@ -47,9 +49,21 @@ const ProductCard = ({ product }) => {
         </Link>
 
         <div className={styles.priceRating}>
-          <span className={styles.price}>{formattedPrice}</span>
+          <div className={styles.priceContainer}>
+            <span className={styles.price}>{formattedPrice}</span>
+            {product.original_price && (
+              <span className={styles.originalPrice}>
+                {new Intl.NumberFormat('vi-VN', {
+                  style: 'currency',
+                  currency: 'VND',
+                  minimumFractionDigits: 0,
+                  maximumFractionDigits: 0
+                }).format(parseFloat(product.original_price) * 23000)}
+              </span>
+            )}
+          </div>
           <div className={styles.rating}>
-            <span className={styles.stars}>
+            <div className={styles.stars}>
               {[...Array(5)].map((_, i) => (
                 <span
                   key={i}
@@ -60,7 +74,7 @@ const ProductCard = ({ product }) => {
                   ★
                 </span>
               ))}
-            </span>
+            </div>
             <span className={styles.ratingCount}>({ratingCount})</span>
           </div>
         </div>
