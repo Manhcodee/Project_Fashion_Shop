@@ -124,7 +124,6 @@ export default function SignIn(props) {
       const decoded = jwtDecode(credentialResponse.credential);
       console.log('Google User:', decoded);
    
-      // Chuẩn bị dữ liệu người dùng
       const userData = {
         idToken: credentialResponse.credential,
         email: decoded.email,
@@ -157,7 +156,6 @@ export default function SignIn(props) {
         throw new Error('Token không hợp lệ từ server');
       }
 
-      // Lưu thông tin user vào localStorage
       localStorage.setItem('token', data.accessToken);
       localStorage.setItem('user', JSON.stringify({
         email: data.email,
@@ -166,7 +164,12 @@ export default function SignIn(props) {
         picture: data.picture
       }));
    
-      router.push('/dashboard');
+      // Điều hướng dựa trên role
+      if (data.role === 'ADMIN') {
+        router.push('/dashboard');
+      } else {
+        router.push('/');
+      }
     } catch (error) {
       console.error('Google Login Error:', error);
       setApiError('Đăng nhập Google thất bại: ' + error.message);
@@ -463,7 +466,7 @@ export default function SignIn(props) {
   
         if (!response.ok) {
           errorMessage = data.message || errorMessage;
-          setApiError(errorMessage); // ❌ KHÔNG throw nữa
+          setApiError(errorMessage);
           return;
         }
   
@@ -475,10 +478,14 @@ export default function SignIn(props) {
           role: data.role,
         }));
   
-        router.push('/dashboard');
+        // Điều hướng dựa trên role
+        if (data.role === 'ADMIN') {
+          router.push('/dashboard');
+        } else {
+          router.push('/');
+        }
   
       } else {
-        // Nếu trả về text thuần (ví dụ: "Sai mật khẩu")
         const text = await response.text();
         if (!response.ok) {
           errorMessage = text || errorMessage;
@@ -532,18 +539,16 @@ export default function SignIn(props) {
   }, [isClient]); // Thêm isClient vào dependency array
 
   const handleFacebookLogin = async (response) => {
-    if (!isClient) return; // Chỉ chạy ở phía client
+    if (!isClient) return;
     
     try {
       setFacebookLoading(true);
       console.log('Facebook Response:', response);
       
-      // Kiểm tra authResponse
       if (!response.authResponse) {
         throw new Error('Không nhận được token từ Facebook');
       }
       
-      // Lấy thông tin người dùng từ Facebook
       const userInfo = await new Promise((resolve, reject) => {
         window.FB.api('/me', { fields: 'id,name,email,picture' }, (userData) => {
           if (userData.error) {
@@ -556,7 +561,6 @@ export default function SignIn(props) {
       
       console.log('User Info from FB:', userInfo);
       
-      // Gửi cả token và thông tin người dùng
       const result = await fetch('http://localhost:8080/api/auth/facebook-login', {
         method: 'POST',
         headers: {
@@ -585,7 +589,12 @@ export default function SignIn(props) {
         profilePicture: data.profilePicture
       }));
 
-      router.push('/dashboard');
+      // Điều hướng dựa trên role
+      if (data.role === 'ADMIN') {
+        router.push('/dashboard');
+      } else {
+        router.push('/');
+      }
     } catch (error) {
       console.error('Facebook Login Error:', error);
       setApiError('Đăng nhập Facebook thất bại: ' + error.message);

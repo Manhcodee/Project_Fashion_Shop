@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 import Header from "../components/home/Header";
 import Navigation from "../components/home/Navigation";
 import ProductCard from "../components/home/ProductCard";
@@ -9,6 +10,8 @@ import api from "../services/api";
 import styles from "../styles/Home.module.css";
 
 export default function Home() {
+  const router = useRouter();
+  const [user, setUser] = useState(null);
   const [products, setProducts] = useState([]);
   const [bestSellers, setBestSellers] = useState([]);
   const [newProducts, setNewProducts] = useState([]);
@@ -23,6 +26,21 @@ export default function Home() {
   // Sắp xếp
   const [sortOption, setSortOption] = useState('newest');
   const [displayProducts, setDisplayProducts] = useState([]);
+
+  useEffect(() => {
+    // Kiểm tra trạng thái đăng nhập
+    const userData = localStorage.getItem('user');
+    if (userData) {
+      setUser(JSON.parse(userData));
+    }
+  }, []);
+
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
+    setUser(null);
+    router.push('/');
+  };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -129,7 +147,7 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
-      <Header />
+      <Header user={user} onLogout={handleLogout} />
       <Navigation />
 
       <main className="max-w-[1400px] mx-auto px-4 py-8">

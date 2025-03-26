@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 import {
   FaShoppingCart,
   FaUser,
@@ -7,23 +8,53 @@ import {
   FaHeart,
   FaPhoneAlt,
   FaEnvelope,
+  FaSignOutAlt,
 } from 'react-icons/fa';
 import styles from '../../styles/Header.module.css';
 
-const Header = () => {
+const Header = ({ user, onLogout }) => {
+  const [searchQuery, setSearchQuery] = useState('');
+  const router = useRouter();
+
+  const handleSearch = (e) => {
+    e.preventDefault();
+    if (searchQuery.trim()) {
+      router.push(`/search?q=${encodeURIComponent(searchQuery.trim())}`);
+    }
+  };
+
   return (
-    <header>
+    <header className={styles.header}>
       {/* Top Bar */}
       <div className={styles.topBar}>
-        <div className={styles.topBarContainer}>
-          <div className={styles.topBarLeft}>
+        <div className={styles.container}>
+          <div className={styles.contactInfo}>
             <span><FaPhoneAlt style={{ marginRight: '4px' }} /> Hotline: 1900 1234</span>
             <span><FaEnvelope style={{ marginRight: '4px' }} /> Email: support@fashionshop.com</span>
           </div>
-          <div className={styles.topBarRight}>
-            <Link href="/sign-in">Đăng nhập</Link>
-            <span>|</span>
-            <Link href="/sign-up">Đăng ký</Link>
+          <div className={styles.userActions}>
+            {user ? (
+              <>
+                <Link href="/profile" className={styles.userAction}>
+                  <FaUser className={styles.icon} />
+                  <span>{user.fullName}</span>
+                </Link>
+                <button onClick={onLogout} className={styles.logoutButton}>
+                  <FaSignOutAlt className={styles.icon} />
+                  <span>Đăng xuất</span>
+                </button>
+              </>
+            ) : (
+              <>
+                <Link href="/sign-in" className={styles.userAction}>
+                  <FaUser className={styles.icon} />
+                  <span>Đăng nhập</span>
+                </Link>
+                <Link href="/sign-up" className={styles.userAction}>
+                  <span>Đăng ký</span>
+                </Link>
+              </>
+            )}
           </div>
         </div>
       </div>
@@ -37,19 +68,21 @@ const Header = () => {
           </Link>
 
           {/* Search Bar */}
-          <div className={styles.searchContainer}>
+          <form onSubmit={handleSearch} className={styles.searchForm}>
             <input
               type="text"
               placeholder="Tìm kiếm sản phẩm..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
               className={styles.searchInput}
             />
-            <button className={styles.searchButton}>
-              <FaSearch className="w-4 h-4" />
+            <button type="submit" className={styles.searchButton}>
+              <FaSearch className={styles.searchIcon} />
             </button>
-          </div>
+          </form>
 
           {/* Actions */}
-          <div className={styles.actionsGroup}>
+          <div className={styles.headerActions}>
             <Link href="/wishlist" className={styles.actionItem}>
               <FaHeart className={styles.actionIcon} />
               <span className={styles.actionText}>Yêu thích</span>
@@ -57,14 +90,8 @@ const Header = () => {
             </Link>
 
             <Link href="/cart" className={styles.actionItem}>
-              <FaShoppingCart className={styles.actionIcon} />
-              <span className={styles.actionText}>Giỏ hàng</span>
-              <span className={styles.actionBadge}>0</span>
-            </Link>
-
-            <Link href="/profile" className={styles.actionItem}>
-              <FaUser className={styles.actionIcon} />
-              <span className={styles.actionText}>Tài khoản</span>
+              <FaShoppingCart className={styles.icon} />
+              <span className={styles.cartCount}>0</span>
             </Link>
           </div>
         </div>
