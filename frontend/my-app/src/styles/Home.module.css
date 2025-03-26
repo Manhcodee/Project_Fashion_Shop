@@ -81,8 +81,7 @@
   }
   
   .productGrid img {
-    max-height: 160px;
-    width: auto;
+    max-height: 215px;
     margin: 0 auto;
     object-fit: contain;
   }
