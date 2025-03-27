@@ -59,22 +59,23 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                // Cho phép CORS
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
-                // Vô hiệu hóa CSRF vì chúng ta sử dụng JWT
                 .csrf(AbstractHttpConfigurer::disable)
-                // Cấu hình quyền truy cập cho các endpoint
                 .authorizeHttpRequests(auth -> auth
-                        // Cho phép truy cập không cần xác thực cho một số endpoint
                         .requestMatchers("/api/products/**").permitAll()
                         .requestMatchers("/public/api/**").permitAll()
                         .requestMatchers("/api/auth/**").permitAll()
                         .requestMatchers("/oauth2/**", "/login/oauth2/**", "/ws/**", "/topic/**", "/app/**").permitAll()
                         .requestMatchers("/api/test/**").permitAll()
                         .requestMatchers("/", "/login", "/sign-in").permitAll()
-                        // Yêu cầu xác thực cho tất cả các endpoint khác
-                        .anyRequest().authenticated())
-                // Cấu hình OAuth2 login
+                        .requestMatchers(
+                                "/api/auth/register",
+                                "/api/auth/login",
+                                "/api/auth/verify-email",
+                                "/api/auth/verify-code"
+                        ).permitAll()
+                        .anyRequest().authenticated()
+                )
                 .oauth2Login(oauth2 -> oauth2
                         .loginPage("http://localhost:3000/sign-in")
                         .defaultSuccessUrl("http://localhost:3000/dashboard", true)
@@ -84,11 +85,7 @@ public class SecurityConfig {
                         .successHandler((request, response, authentication) -> {
                             OAuth2User oAuth2User = (OAuth2User) authentication.getPrincipal();
                             String email = oAuth2User.getAttribute("email");
-
-                            // Tạo JWT token
                             String token = jwtTokenProvider.generateToken(email);
-
-                            // Chuyển hướng về frontend với token
                             String redirectUrl = String.format(
                                     "http://localhost:3000/sign-in?token=%s",
                                     token);
@@ -99,19 +96,19 @@ public class SecurityConfig {
                                     "http://localhost:3000/sign-in?error=%s",
                                     exception.getMessage());
                             response.sendRedirect(redirectUrl);
-                        }))
-                // Cấu hình logout
+                        })
+                )
                 .logout(logout -> logout
                         .logoutSuccessUrl("http://localhost:3000/")
-                        .permitAll())
-                // Cấu hình xử lý lỗi xác thực
+                        .permitAll()
+                )
                 .exceptionHandling(exception -> exception
-                        .authenticationEntryPoint(authenticationEntryPoint))
-                // Cấu hình quản lý phiên làm việc (stateless vì chúng ta sử dụng JWT)
+                        .authenticationEntryPoint(authenticationEntryPoint)
+                )
                 .sessionManagement(session -> session
-                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                );
 
-        // Đặt filter JWT trước UsernamePasswordAuthenticationFilter
         http.addFilterBefore(authenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();

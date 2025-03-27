@@ -16,14 +16,21 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import com.example.backend.fashion.exception.EmailAlreadyExistsException;
+import com.example.backend.fashion.entity.enums.AuthProvider;
+import com.example.backend.fashion.dto.auth.AuthResponse;
+import lombok.extern.slf4j.Slf4j;
 
 import lombok.RequiredArgsConstructor;
 import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.Random;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class AuthService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
@@ -36,51 +43,47 @@ public class AuthService {
     private JwtTokenProvider jwtTokenProvider;
 
     @Transactional
-    public void register(RegisterRequest request) {
-        if ((request.getEmail() == null || request.getEmail().trim().isEmpty()) &&
-                (request.getPhone() == null || request.getPhone().trim().isEmpty())) {
-            throw new BadRequestException("Cần cung cấp email hoặc số điện thoại");
-        }
-
-        if (request.getEmail() != null && !request.getEmail().trim().isEmpty()) {
+    public AuthResponse registerUser(RegisterRequest request) {
+        try {
+            // Kiểm tra email tồn tại
             if (userRepository.existsByEmail(request.getEmail())) {
-                throw new BadRequestException("Email đã được sử dụng");
+                throw new EmailAlreadyExistsException("Email đã tồn tại");
             }
-        }
 
-        if (request.getPhone() != null && !request.getPhone().trim().isEmpty()) {
-            if (userRepository.existsByPhone(request.getPhone())) {
-                throw new BadRequestException("Số điện thoại đã được sử dụng");
-            }
-        }
-
-        User user = new User();
-        user.setFullName(request.getFullName());
-
-        if (request.getEmail() != null && !request.getEmail().trim().isEmpty()) {
+            // Tạo user mới
+            User user = new User();
             user.setEmail(request.getEmail());
-        } else {
-            String temporaryEmail = "user_" + System.currentTimeMillis() + "@placeholder.com";
-            user.setEmail(temporaryEmail);
-        }
-
-        if (request.getPhone() != null && !request.getPhone().trim().isEmpty()) {
+            user.setFullName(request.getFullName());
+            user.setPassword(passwordEncoder.encode(request.getPassword()));
             user.setPhone(request.getPhone());
-        } else {
-            String temporaryPhone = "TEMP" + System.currentTimeMillis();
-            user.setPhone(temporaryPhone);
-        }
-
-        user.setPassword(passwordEncoder.encode(request.getPassword()));
-        user.setAddress(request.getAddress());
-        user.setRole(Role.USER);
-        user.setEnabled(false); // Mặc định tài khoản chưa được kích hoạt
-
-        userRepository.save(user);
-
-        // Gửi mã xác thực nếu có email
-        if (request.getEmail() != null && !request.getEmail().trim().isEmpty()) {
-            sendVerificationCode(request.getEmail());
+            user.setRole(Role.USER);
+            user.setAuthProvider(AuthProvider.LOCAL);
+            user.setEnabled(false);
+            user.setVerified(false);
+            
+            // Tạo mã xác thực
+            String verificationCode = generateVerificationCode();
+            user.setVerificationCode(verificationCode);
+            user.setVerificationCodeExpiry(LocalDateTime.now().plusMinutes(15));
+            
+            // Lưu user
+            userRepository.save(user);
+            
+            // Gửi email xác thực
+            try {
+                emailService.sendVerificationEmail(user.getEmail(), verificationCode);
+            } catch (Exception e) {
+                log.error("Lỗi gửi email xác thực: ", e);
+                // Không throw exception ở đây, chỉ log lỗi
+            }
+            
+            return new AuthResponse(true, "Đăng ký thành công! Vui lòng kiểm tra email để xác thực tài khoản.");
+            
+        } catch (EmailAlreadyExistsException e) {
+            throw e; // Ném lại exception này để controller xử lý
+        } catch (Exception e) {
+            log.error("Lỗi không xác định khi đăng ký: ", e);
+            throw new RuntimeException("Có lỗi xảy ra khi đăng ký. Vui lòng thử lại sau.");
         }
     }
 
@@ -91,8 +94,8 @@ public class AuthService {
             throw new RuntimeException("Tài khoản không tồn tại");
         }
 
-        if (!user.isEnabled()) {
-            throw new RuntimeException("Tài khoản chưa được kích hoạt");
+        if (!user.isEnabled() || !user.isVerified()) {
+            throw new RuntimeException("Tài khoản chưa được kích hoạt hoặc xác thực. Vui lòng kiểm tra email để xác thực tài khoản.");
         }
 
         Authentication authentication = authenticationManager.authenticate(
@@ -109,6 +112,7 @@ public class AuthService {
         jwtAuthResponse.setEmail(user.getEmail());
         jwtAuthResponse.setFullName(user.getFullName());
         jwtAuthResponse.setRole(user.getRole());
+        jwtAuthResponse.setVerified(user.isVerified());
 
         return jwtAuthResponse;
     }
@@ -138,6 +142,7 @@ public class AuthService {
         }
 
         user.setEnabled(true);
+        user.setVerified(true);
         user.setVerificationCode(null);
         user.setVerificationCodeExpiry(null);
         userRepository.save(user);

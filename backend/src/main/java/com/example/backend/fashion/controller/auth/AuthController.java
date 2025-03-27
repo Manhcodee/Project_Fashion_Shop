@@ -13,15 +13,19 @@ import com.example.backend.fashion.repository.user.UserRepository;
 import com.example.backend.fashion.security.JwtTokenProvider;
 import com.example.backend.fashion.entity.enums.Role;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import com.example.backend.fashion.exception.EmailAlreadyExistsException;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import lombok.extern.slf4j.Slf4j;
 
 @RestController
 @RequestMapping("/api/auth")
 @RequiredArgsConstructor
 @CrossOrigin(origins = "http://localhost:3000")
+@Slf4j
 public class AuthController {
     @Autowired
     private AuthService authService;
@@ -39,9 +43,26 @@ public class AuthController {
     private PasswordEncoder passwordEncoder;
 
     @PostMapping("/register")
-    public ResponseEntity<?> register(@Valid @RequestBody RegisterRequest request) {
-        authService.register(request);
-        return ResponseEntity.ok().body(new MessageResponse("Đăng ký thành công"));
+    public ResponseEntity<?> registerUser(@Valid @RequestBody RegisterRequest request) {
+        try {
+            log.info("Đang xử lý đăng ký cho email: {}", request.getEmail());
+            
+            AuthResponse response = authService.registerUser(request);
+            
+            return ResponseEntity.ok(new MessageResponse(response.getMessage()));
+            
+        } catch (EmailAlreadyExistsException e) {
+            log.error("Email đã tồn tại: {}", request.getEmail());
+            return ResponseEntity
+                .status(HttpStatus.CONFLICT)
+                .body(new MessageResponse("Email này đã được đăng ký!"));
+                
+        } catch (Exception e) {
+            log.error("Lỗi khi đăng ký: ", e);
+            return ResponseEntity
+                .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(new MessageResponse(e.getMessage()));
+        }
     }
 
     @PostMapping("/login")

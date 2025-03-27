@@ -118,6 +118,15 @@ export default function SignIn(props) {
   
   const steps = ['Nhập email', 'Nhập mã xác nhận', 'Đặt lại mật khẩu'];
 
+  const [openVerifyDialog, setOpenVerifyDialog] = React.useState(false);
+  const [verifyData, setVerifyData] = React.useState({
+    email: '',
+    code: ''
+  });
+  const [verifyError, setVerifyError] = React.useState('');
+  const [verifySuccess, setVerifySuccess] = React.useState('');
+  const [verifyLoading, setVerifyLoading] = React.useState(false);
+
   const handleGoogleSuccess = async (credentialResponse) => {
     try {
       setGoogleLoading(true);
@@ -154,6 +163,12 @@ export default function SignIn(props) {
 
       if (!data.accessToken) {
         throw new Error('Token không hợp lệ từ server');
+      }
+
+      // Kiểm tra trạng thái xác thực
+      if (!data.verified) {
+        setApiError('Tài khoản chưa được xác thực. Vui lòng kiểm tra email để xác thực tài khoản.');
+        return;
       }
 
       localStorage.setItem('token', data.accessToken);
@@ -457,53 +472,73 @@ export default function SignIn(props) {
       });
   
       console.log('📥 Response Status:', response.status);
-  
-      let errorMessage = 'Thông tin đăng nhập không chính xác';
-      const contentType = response.headers.get('content-type');
-  
-      if (contentType && contentType.includes('application/json')) {
-        const data = await response.json();
-  
-        if (!response.ok) {
-          errorMessage = data.message || errorMessage;
-          setApiError(errorMessage);
+
+      // Xử lý response 401
+      if (response.status === 401) {
+        setApiError('Tài khoản chưa được kích hoạt. Vui lòng kiểm tra email để xác thực tài khoản.');
+        setVerifyData({ ...verifyData, email: formData.emailOrPhone });
+        return;
+      }
+
+      // Xử lý các response khác
+      let data;
+      try {
+        data = await response.json();
+      } catch (err) {
+        console.error('Error parsing JSON:', err);
+        setApiError('Có lỗi xảy ra, vui lòng thử lại sau');
+        return;
+      }
+
+      if (!response.ok) {
+        // Kiểm tra các trường hợp lỗi cụ thể từ server
+        if (data.message && (
+          data.message.toLowerCase().includes('chưa được kích hoạt') || 
+          data.message.toLowerCase().includes('chưa được xác thực') ||
+          data.message.toLowerCase().includes('tài khoản chưa được kích hoạt')
+        )) {
+          setApiError('Tài khoản chưa được kích hoạt. Vui lòng kiểm tra email để xác thực tài khoản.');
+          setVerifyData({ ...verifyData, email: formData.emailOrPhone });
           return;
         }
+        
+        // Các lỗi khác từ server
+        setApiError(data.message || 'Đăng nhập không thành công, vui lòng thử lại');
+        return;
+      }
+
+      // Kiểm tra trạng thái xác thực từ response
+      if (!data.verified) {
+        setApiError('Tài khoản chưa được xác thực. Vui lòng kiểm tra email để xác thực tài khoản.');
+        setVerifyData({ ...verifyData, email: formData.emailOrPhone });
+        return;
+      }
   
-        // Đăng nhập thành công
-        localStorage.setItem('token', data.accessToken);
-        localStorage.setItem('user', JSON.stringify({
-          email: data.email,
-          fullName: data.fullName,
-          role: data.role,
-        }));
+      // Đăng nhập thành công
+      localStorage.setItem('token', data.accessToken);
+      localStorage.setItem('user', JSON.stringify({
+        email: data.email,
+        fullName: data.fullName,
+        role: data.role,
+      }));
   
-        // Điều hướng dựa trên role
-        if (data.role === 'ADMIN') {
-          router.push('/dashboard');
-        } else {
-          router.push('/');
-        }
-  
+      // Điều hướng dựa trên role
+      if (data.role === 'ADMIN') {
+        router.push('/dashboard');
       } else {
-        const text = await response.text();
-        if (!response.ok) {
-          errorMessage = text || errorMessage;
-          setApiError(errorMessage);
-          return;
-        }
+        router.push('/');
       }
   
     } catch (err) {
       console.error('❌ Lỗi:', err);
-      setApiError(err.message || 'Đăng nhập thất bại, vui lòng thử lại');
+      setApiError('Đăng nhập thất bại, vui lòng thử lại');
   
       if (
         err.message.includes('kết nối') ||
         err.message.includes('không nhận được phản hồi') ||
         err.message.includes('Failed to fetch')
       ) {
-        setApiError(prev => prev + ' Hãy kiểm tra kết nối hoặc thử lại sau.');
+        setApiError('Không thể kết nối đến server. Hãy kiểm tra kết nối hoặc thử lại sau.');
       }
   
     } finally {
@@ -622,6 +657,48 @@ export default function SignIn(props) {
     }, {scope: 'email,public_profile'});
   };
 
+  const handleVerifySubmit = async (e) => {
+    e.preventDefault();
+    if (!verifyData.code) {
+      setVerifyError('Vui lòng nhập mã xác thực');
+      return;
+    }
+    
+    setVerifyLoading(true);
+    setVerifyError('');
+    setVerifySuccess('');
+    
+    try {
+      const response = await fetch('http://localhost:8080/api/auth/verify-email', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email: verifyData.email,
+          code: verifyData.code
+        }),
+      });
+
+      const data = await response.json();
+      
+      if (!response.ok) {
+        throw new Error(data.message || 'Mã xác thực không hợp lệ');
+      }
+      
+      setVerifySuccess('Xác thực email thành công! Bạn có thể đăng nhập.');
+      setApiError('');
+      setTimeout(() => {
+        setOpenVerifyDialog(false);
+        setVerifyData({ email: '', code: '' });
+      }, 2000);
+    } catch (err) {
+      setVerifyError(err.message || 'Đã xảy ra lỗi, vui lòng thử lại');
+    } finally {
+      setVerifyLoading(false);
+    }
+  };
+
   if (apiError) {
     console.error('API Error:', apiError);
   }
@@ -668,8 +745,40 @@ export default function SignIn(props) {
             </Typography>
             
             {apiError && (
-              <Alert severity="error" sx={{ width: '100%' }}>
-                {apiError}
+              <Alert 
+                severity="error" 
+                sx={{ 
+                  width: '100%',
+                  '& .MuiAlert-message': {
+                    width: '100%'
+                  }
+                }}
+              >
+                <Box sx={{ width: '100%' }}>
+                  <Typography>
+                    {apiError}
+                    {apiError.includes('chưa được kích hoạt') && (
+                      <Typography
+                        component="span"
+                        sx={{
+                          display: 'block',
+                          mt: 1,
+                          color: '#1976d2',
+                          cursor: 'pointer',
+                          fontWeight: 500,
+                          '&:hover': {
+                            textDecoration: 'underline'
+                          }
+                        }}
+                        onClick={() => {
+                          setOpenVerifyDialog(true);
+                        }}
+                      >
+                        NHẬP MÃ KÍCH HOẠT
+                      </Typography>
+                    )}
+                  </Typography>
+                </Box>
               </Alert>
             )}
             
@@ -687,7 +796,7 @@ export default function SignIn(props) {
               <FormControl>
                 <FormLabel htmlFor="emailOrPhone">Email hoặc Số điện thoại</FormLabel>
                 <TextField
-                  error={emailError}
+                  error={Boolean(emailError)}
                   helperText={emailErrorMessage}
                   id="emailOrPhone"
                   name="emailOrPhone"
@@ -705,7 +814,7 @@ export default function SignIn(props) {
               <FormControl>
                 <FormLabel htmlFor="password">Mật khẩu</FormLabel>
                 <TextField
-                  error={passwordError}
+                  error={Boolean(passwordError)}
                   helperText={passwordErrorMessage}
                   name="password"
                   placeholder="••••••"
@@ -1093,6 +1202,73 @@ export default function SignIn(props) {
               ) : (
                 'Tiếp tục'
               )}
+            </Button>
+          </DialogActions>
+        </Dialog>
+
+        {/* Dialog Xác thực Email */}
+        <Dialog
+          open={openVerifyDialog}
+          onClose={() => setOpenVerifyDialog(false)}
+          fullWidth
+          maxWidth="sm"
+          PaperProps={{
+            sx: {
+              background: theme => theme.palette.mode === 'dark' 
+                ? 'linear-gradient(to bottom right, #1a237e, #121212)'
+                : 'linear-gradient(to bottom right, #e3f2fd, #ffffff)',
+              borderRadius: '16px',
+              boxShadow: theme => theme.palette.mode === 'dark'
+                ? '0 8px 32px rgba(0, 0, 0, 0.3)'
+                : '0 8px 32px rgba(0, 0, 0, 0.1)',
+            }
+          }}
+        >
+          <DialogTitle sx={{ pb: 1 }}>
+            <Stack direction="row" alignItems="center" spacing={1}>
+              <Typography variant="h6" sx={{ fontWeight: 600 }}>
+                Xác thực Email
+              </Typography>
+              <IconButton
+                aria-label="close"
+                onClick={() => setOpenVerifyDialog(false)}
+                sx={{ marginLeft: 'auto' }}
+              >
+                <CloseIcon />
+              </IconButton>
+            </Stack>
+          </DialogTitle>
+
+          <DialogContent sx={{ pt: 2 }}>
+            {verifyError && (
+              <Alert severity="error" sx={{ mb: 2 }}>{verifyError}</Alert>
+            )}
+            {verifySuccess && (
+              <Alert severity="success" sx={{ mb: 2 }}>{verifySuccess}</Alert>
+            )}
+
+            <form onSubmit={handleVerifySubmit}>
+              <TextField
+                fullWidth
+                label="Mã xác thực"
+                value={verifyData.code}
+                onChange={(e) => setVerifyData({ ...verifyData, code: e.target.value })}
+                required
+                sx={{ mt: 2 }}
+              />
+            </form>
+          </DialogContent>
+
+          <DialogActions sx={{ px: 3, pb: 3 }}>
+            <Button onClick={() => setOpenVerifyDialog(false)}>
+              Hủy
+            </Button>
+            <Button
+              variant="contained"
+              onClick={handleVerifySubmit}
+              disabled={verifyLoading}
+            >
+              {verifyLoading ? 'Đang xử lý...' : 'Xác thực'}
             </Button>
           </DialogActions>
         </Dialog>

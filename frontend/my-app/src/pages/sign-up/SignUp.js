@@ -19,6 +19,12 @@ import ColorModeSelect from '../shared-theme/ColorModeSelect';
 import { GoogleIcon, FacebookIcon } from '../sign-in/components/CustomIcons';
 import FilterVintageIcon from '@mui/icons-material/FilterVintage';
 import '../../styles/fixSuccess.module.css';
+import Dialog from '@mui/material/Dialog';
+import DialogTitle from '@mui/material/DialogTitle';
+import DialogContent from '@mui/material/DialogContent';
+import DialogActions from '@mui/material/DialogActions';
+import IconButton from '@mui/material/IconButton';
+import CloseIcon from '@mui/icons-material/Close';
 
 const Card = styled(MuiCard)(({ theme }) => ({
   display: 'flex',
@@ -90,6 +96,15 @@ export default function SignUp(props) {
   const [apiSuccess, setApiSuccess] = React.useState('');
   const [loading, setLoading] = React.useState(false);
   const [verificationSent, setVerificationSent] = React.useState(false);
+
+  const [openVerifyDialog, setOpenVerifyDialog] = React.useState(false);
+  const [verifyData, setVerifyData] = React.useState({
+    email: '',
+    code: ''
+  });
+  const [verifyError, setVerifyError] = React.useState('');
+  const [verifySuccess, setVerifySuccess] = React.useState('');
+  const [verifyLoading, setVerifyLoading] = React.useState(false);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -213,10 +228,15 @@ export default function SignUp(props) {
         // Xử lý phản hồi thành công
         if (isEmailInput) {
           setVerificationSent(true);
-          setApiSuccess('Đăng ký thành công! Vui lòng kiểm tra email của bạn để xác thực tài khoản.');
+          setApiSuccess('Đăng ký thành công! Vui lòng xác thực tài khoản qua email trước khi đăng nhập.');
+          // Chuyển hướng đến trang xác thực email
+          router.push(`/verify-email?email=${encodeURIComponent(formData.emailOrPhone)}`);
         } else {
-          setApiSuccess('Đăng ký thành công! Chuyển hướng đến trang đăng nhập...');
-          setTimeout(() => router.push('/sign-in'), 2000);
+          setApiSuccess('Đăng ký thành công!');
+          setTimeout(() => {
+            setApiSuccess(prev => prev + ' Chuyển hướng đến trang đăng nhập...');
+            setTimeout(() => router.push('/sign-in'), 1000);
+          }, 1000);
         }
       } else {
         const text = await response.text();
@@ -240,6 +260,48 @@ export default function SignUp(props) {
       }
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleVerifySubmit = async (e) => {
+    e.preventDefault();
+    if (!verifyData.code) {
+      setVerifyError('Vui lòng nhập mã xác thực');
+      return;
+    }
+    
+    setVerifyLoading(true);
+    setVerifyError('');
+    setVerifySuccess('');
+    
+    try {
+      const response = await fetch('http://localhost:8080/api/auth/verify-email', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email: verifyData.email,
+          code: verifyData.code
+        }),
+      });
+
+      const data = await response.json();
+      
+      if (!response.ok) {
+        throw new Error(data.message || 'Mã xác thực không hợp lệ');
+      }
+      
+      setVerifySuccess('Xác thực email thành công! Bạn có thể đăng nhập.');
+      setTimeout(() => {
+        setOpenVerifyDialog(false);
+        setVerifyData({ email: '', code: '' });
+        router.push('/sign-in');
+      }, 2000);
+    } catch (err) {
+      setVerifyError(err.message || 'Đã xảy ra lỗi, vui lòng thử lại');
+    } finally {
+      setVerifyLoading(false);
     }
   };
   
@@ -305,13 +367,16 @@ export default function SignUp(props) {
                 <Button 
                   color="inherit" 
                   size="small"
-                  onClick={() => router.push('/sign-in')}
+                  onClick={() => {
+                    setVerifyData({ ...verifyData, email: formData.emailOrPhone });
+                    setOpenVerifyDialog(true);
+                  }}
                 >
-                  ĐẾN TRANG ĐĂNG NHẬP
+                  XÁC THỰC NGAY
                 </Button>
               }
             >
-              Vui lòng kiểm tra email của bạn để xác thực tài khoản. Sau khi xác thực, bạn có thể đăng nhập.
+              Vui lòng xác thực tài khoản qua email trước khi đăng nhập. Kiểm tra hộp thư của bạn.
             </Alert>
           )}
           
@@ -439,6 +504,73 @@ export default function SignUp(props) {
           </Box>
         </Card>
       </SignUpContainer>
+
+      {/* Dialog Xác thực Email */}
+      <Dialog
+        open={openVerifyDialog}
+        onClose={() => setOpenVerifyDialog(false)}
+        fullWidth
+        maxWidth="sm"
+        PaperProps={{
+          sx: {
+            background: theme => theme.palette.mode === 'dark' 
+              ? 'linear-gradient(to bottom right, #1a237e, #121212)'
+              : 'linear-gradient(to bottom right, #e3f2fd, #ffffff)',
+            borderRadius: '16px',
+            boxShadow: theme => theme.palette.mode === 'dark'
+              ? '0 8px 32px rgba(0, 0, 0, 0.3)'
+              : '0 8px 32px rgba(0, 0, 0, 0.1)',
+          }
+        }}
+      >
+        <DialogTitle sx={{ pb: 1 }}>
+          <Stack direction="row" alignItems="center" spacing={1}>
+            <Typography variant="h6" sx={{ fontWeight: 600 }}>
+              Xác thực Email
+            </Typography>
+            <IconButton
+              aria-label="close"
+              onClick={() => setOpenVerifyDialog(false)}
+              sx={{ marginLeft: 'auto' }}
+            >
+              <CloseIcon />
+            </IconButton>
+          </Stack>
+        </DialogTitle>
+
+        <DialogContent sx={{ pt: 2 }}>
+          {verifyError && (
+            <Alert severity="error" sx={{ mb: 2 }}>{verifyError}</Alert>
+          )}
+          {verifySuccess && (
+            <Alert severity="success" sx={{ mb: 2 }}>{verifySuccess}</Alert>
+          )}
+
+          <form onSubmit={handleVerifySubmit}>
+            <TextField
+              fullWidth
+              label="Mã xác thực"
+              value={verifyData.code}
+              onChange={(e) => setVerifyData({ ...verifyData, code: e.target.value })}
+              required
+              sx={{ mt: 2 }}
+            />
+          </form>
+        </DialogContent>
+
+        <DialogActions sx={{ px: 3, pb: 3 }}>
+          <Button onClick={() => setOpenVerifyDialog(false)}>
+            Hủy
+          </Button>
+          <Button
+            variant="contained"
+            onClick={handleVerifySubmit}
+            disabled={verifyLoading}
+          >
+            {verifyLoading ? 'Đang xử lý...' : 'Xác thực'}
+          </Button>
+        </DialogActions>
+      </Dialog>
     </AppTheme>
   );
 }

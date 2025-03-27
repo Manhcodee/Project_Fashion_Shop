@@ -1,4 +1,4 @@
-package com.example.backend.fashion.controller;
+package com.example.backend.fashion.controller.products;
 
 import com.example.backend.fashion.entity.model.products.Product;
 import com.example.backend.fashion.service.products.ProductService;
