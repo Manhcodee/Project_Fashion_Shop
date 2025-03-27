@@ -1,154 +1,132 @@
-// API base URL
-const API_BASE_URL = 'http://localhost:8080';
+import axios from 'axios';
+import { toast } from 'react-toastify';
 
-// API endpoints
-const ENDPOINTS = {
-  PRODUCTS: '/public/api/products',
-  PRODUCT_DETAIL: (id) => `/public/api/products/${id}`,
-  FEATURED_PRODUCTS: '/public/api/products/featured',
-  NEW_PRODUCTS: '/public/api/products/new',
-  CATEGORY_PRODUCTS: (category) => `/public/api/products/category/${category}`,
-};
+// Thay đổi URL API để sử dụng API local của Next.js
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080/api';
 
-// Timeout cho API request
-const TIMEOUT_DURATION = 15000; // 15 giây
+// Tạo instance axios với cấu hình mặc định
+const api = axios.create({
+  baseURL: API_URL,
+  headers: {
+    'Content-Type': 'application/json',
+    'Accept': 'application/json'
+  }
+});
 
-// Hàm tạo timeout promise
-const timeoutPromise = (ms) => {
-  return new Promise((_, reject) =>
-    setTimeout(() => reject(new Error('Request timeout')), ms)
-  );
-};
-
-// Hàm trợ giúp để gọi API
-const fetchFromApi = async (endpoint, options = {}) => {
-  try {
-    console.log(`Đang gọi API: ${API_BASE_URL}${endpoint}`);
-    
-    // Race giữa fetch và timeout
-    const response = await Promise.race([
-      fetch(`${API_BASE_URL}${endpoint}`, {
-        method: options.method || 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json',
-          ...options.headers,
-        },
-        credentials: 'omit', // Không gửi credentials
-        mode: 'cors', // Yêu cầu CORS
-        body: options.body ? JSON.stringify(options.body) : undefined,
-        cache: 'no-cache',
-      }),
-      timeoutPromise(TIMEOUT_DURATION)
-    ]);
-
-    if (!response.ok) {
-      console.error('API error:', response.status, response.statusText);
-      throw new Error(`API error: ${response.status} ${response.statusText}`);
+// Thêm interceptor để tự động gắn token vào header
+api.interceptors.request.use(
+  config => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      config.headers['Authorization'] = `Bearer ${token}`;
     }
+    return config;
+  },
+  error => {
+    return Promise.reject(error);
+  }
+);
 
-    // Console log để debug
-    const text = await response.text();
-    console.log('API response text:', text);
+// Thêm interceptor để xử lý lỗi 401 và 403
+api.interceptors.response.use(
+  response => response,
+  error => {
+    if (error.response) {
+      const { status } = error.response;
+      
+      if (status === 401 || status === 403) {
+        // Xóa thông tin đăng nhập
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
+        
+        // Thông báo cho người dùng
+        toast.error('Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại.', {
+          autoClose: 3000,
+          pauseOnHover: true
+        });
+        
+        // Chuyển hướng sau 2 giây nếu không ở trang đăng nhập
+        if (typeof window !== 'undefined' && 
+            !window.location.pathname.includes('/sign-in')) {
+          setTimeout(() => {
+            window.location.href = '/sign-in';
+          }, 2000);
+        }
+      }
+    }
+    return Promise.reject(error);
+  }
+);
+
+// API functions
+const apiService = {
+  // Auth APIs
+  login: async (credentials) => {
+    try {
+      const response = await api.post('/auth/login', credentials);
+      
+      if (response.data?.token) {
+        // Lưu token và user data
+        localStorage.setItem('token', response.data.token);
+        if (response.data.user) {
+          localStorage.setItem('user', JSON.stringify(response.data.user));
+        }
+      }
+      
+      return response;
+    } catch (error) {
+      console.error('Login error:', error);
+      throw error;
+    }
+  },
+  
+  register: (userData) => api.post('/auth/register', userData),
+  verifyAccount: (code) => api.post('/auth/verify', { code }),
+  
+  // Product APIs
+  getProducts: () => api.get('/products'),
+  getProductById: (id) => api.get(`/products/${id}`),
+  getFeaturedProducts: () => api.get('/products/featured'),
+  getNewProducts: () => api.get('/products/new'),
+  searchProducts: (query) => api.get(`/products/search?q=${query}`),
+  
+  // Cart APIs
+  getCart: () => api.get('/cart'),
+  addToCart: (data) => api.post('/cart/add', data),
+  updateCartItem: (data) => api.put('/cart/update', data),
+  removeFromCart: (productId) => api.delete(`/cart/remove/${productId}`),
+  
+  // Wishlist APIs
+  getWishlist: () => api.get('/wishlist'),
+  toggleWishlistItem: (data) => api.post('/wishlist/toggle', data),
+  
+  // Kiểm tra trạng thái đăng nhập
+  checkAuthStatus: () => {
+    const token = localStorage.getItem('token');
+    const user = localStorage.getItem('user');
+    
+    if (!token || !user) {
+      localStorage.removeItem('token');
+      localStorage.removeItem('user');
+      return false;
+    }
     
     try {
-      // Nếu response là JSON hợp lệ
-      const data = text ? JSON.parse(text) : {};
-      console.log('API data parsed:', data);
-      return data;
-    } catch (parseError) {
-      // Nếu không phải JSON, trả về text
-      console.error('JSON parsing error:', parseError);
-      return { error: 'Invalid JSON response', text };
+      // Kiểm tra token có hợp lệ không
+      const userData = JSON.parse(user);
+      if (!userData) {
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
+        return false;
+      }
+      
+      return true;
+    } catch (error) {
+      localStorage.removeItem('token');
+      localStorage.removeItem('user');
+      return false;
     }
-  } catch (error) {
-    console.error('API call failed:', error);
-    if (error.message === 'Request timeout') {
-      console.error('API request timed out after', TIMEOUT_DURATION, 'ms');
-    }
-    throw error;
   }
 };
 
-// Fallback data in case API fails
-const FALLBACK_PRODUCTS = [
-  {
-    id: 1,
-    title: "Fjallraven - Foldsack No. 1 Backpack",
-    price: 109.95,
-    description: "Your perfect pack for everyday use and walks in the forest.",
-    category: "men's clothing",
-    image: "https://fakestoreapi.com/img/81fPKd-2AYL._AC_SL1500_.jpg",
-    rating_rate: 3.9,
-    rating_count: 120,
-    is_featured: true,
-    is_new: false
-  },
-  {
-    id: 2,
-    title: "Mens Casual Premium Slim Fit T-Shirts",
-    price: 22.3,
-    description: "Slim-fitting style, contrast raglan long sleeve.",
-    category: "men's clothing",
-    image: "https://fakestoreapi.com/img/71-3HjGNDUL._AC_SY879._SX._UX._SY._UY_.jpg",
-    rating_rate: 4.1,
-    rating_count: 259,
-    is_featured: false,
-    is_new: true
-  }
-];
-
-// API functions with fallback
-const api = {
-  // Lấy tất cả sản phẩm
-  getAllProducts: async () => {
-    try {
-      return await fetchFromApi(ENDPOINTS.PRODUCTS);
-    } catch (error) {
-      console.warn('Falling back to local data for getAllProducts');
-      return FALLBACK_PRODUCTS;
-    }
-  },
-  
-  // Lấy chi tiết sản phẩm theo ID
-  getProductById: async (id) => {
-    try {
-      return await fetchFromApi(ENDPOINTS.PRODUCT_DETAIL(id));
-    } catch (error) {
-      console.warn(`Falling back to local data for product ID ${id}`);
-      return FALLBACK_PRODUCTS.find(p => p.id === Number(id)) || FALLBACK_PRODUCTS[0];
-    }
-  },
-  
-  // Lấy sản phẩm nổi bật
-  getFeaturedProducts: async () => {
-    try {
-      return await fetchFromApi(ENDPOINTS.FEATURED_PRODUCTS);
-    } catch (error) {
-      console.warn('Falling back to local data for featured products');
-      return FALLBACK_PRODUCTS.filter(p => p.is_featured);
-    }
-  },
-  
-  // Lấy sản phẩm mới
-  getNewProducts: async () => {
-    try {
-      return await fetchFromApi(ENDPOINTS.NEW_PRODUCTS);
-    } catch (error) {
-      console.warn('Falling back to local data for new products');
-      return FALLBACK_PRODUCTS.filter(p => p.is_new);
-    }
-  },
-  
-  // Lấy sản phẩm theo danh mục
-  getProductsByCategory: async (category) => {
-    try {
-      return await fetchFromApi(ENDPOINTS.CATEGORY_PRODUCTS(category));
-    } catch (error) {
-      console.warn(`Falling back to local data for category ${category}`);
-      return FALLBACK_PRODUCTS.filter(p => p.category === category);
-    }
-  },
-};
-
-export default api; 
+export default apiService; 

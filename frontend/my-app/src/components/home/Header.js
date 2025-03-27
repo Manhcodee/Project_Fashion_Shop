@@ -12,7 +12,7 @@ import {
 } from 'react-icons/fa';
 import styles from '../../styles/Header.module.css';
 
-const Header = ({ user, onLogout }) => {
+const Header = ({ user, onLogout, cartCount = 0, wishlistCount = 0 }) => {
   const [searchQuery, setSearchQuery] = useState('');
   const router = useRouter();
 
@@ -86,12 +86,13 @@ const Header = ({ user, onLogout }) => {
             <Link href="/wishlist" className={styles.actionItem}>
               <FaHeart className={styles.actionIcon} />
               <span className={styles.actionText}>Yêu thích</span>
-              <span className={styles.actionBadge}>0</span>
+              {wishlistCount > 0 && <span className={styles.actionBadge}>{wishlistCount}</span>}
             </Link>
 
             <Link href="/cart" className={styles.actionItem}>
-              <FaShoppingCart className={styles.icon} />
-              <span className={styles.cartCount}>0</span>
+              <FaShoppingCart className={styles.actionIcon} />
+              <span className={styles.actionText}>Giỏ hàng</span>
+              {cartCount > 0 && <span className={styles.actionBadge}>{cartCount}</span>}
             </Link>
           </div>
         </div>

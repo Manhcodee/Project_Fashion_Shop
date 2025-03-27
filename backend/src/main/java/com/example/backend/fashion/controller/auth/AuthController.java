@@ -205,6 +205,50 @@ public class AuthController {
         }
     }
 
+    @PostMapping("/save-token")
+    public ResponseEntity<?> saveToken(@RequestBody SaveTokenRequest request) {
+        try {
+            authService.saveToken(request);
+            return ResponseEntity.ok(new MessageResponse("Token đã được lưu thành công"));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(new MessageResponse(e.getMessage()));
+        }
+    }
+
+    @PostMapping("/refresh-token")
+    public ResponseEntity<?> refreshToken(@RequestBody RefreshTokenRequest request) {
+        try {
+            JwtAuthResponse response = authService.refreshToken(request);
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(new MessageResponse(e.getMessage()));
+        }
+    }
+
+    @GetMapping("/verify-token")
+    public ResponseEntity<?> verifyToken(@RequestHeader("Authorization") String token) {
+        try {
+            if (token != null && token.startsWith("Bearer ")) {
+                token = token.substring(7);
+            }
+            boolean isValid = jwtTokenProvider.validateToken(token);
+            if (isValid) {
+                String email = jwtTokenProvider.getEmailFromToken(token);
+                User user = userRepository.findByEmail(email)
+                    .orElseThrow(() -> new RuntimeException("User not found"));
+                return ResponseEntity.ok(Map.of(
+                    "valid", true,
+                    "email", user.getEmail(),
+                    "fullName", user.getFullName(),
+                    "role", user.getRole()
+                ));
+            }
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new MessageResponse("Token không hợp lệ"));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new MessageResponse(e.getMessage()));
+        }
+    }
+
     @GetMapping("/ping")
     public ResponseEntity<?> ping() {
         return ResponseEntity.ok(new MessageResponse("Kết nối đến máy chủ thành công"));

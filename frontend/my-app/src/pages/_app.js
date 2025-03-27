@@ -1,8 +1,7 @@
+import React from 'react';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import '../styles/globals.css';
-// import '../styles/fixSuccess.module.css';
-// import '../styles/forgotpassword.module.css';
 
 function MyApp({ Component, pageProps }) {
   return (
@@ -18,7 +17,6 @@ function MyApp({ Component, pageProps }) {
         pauseOnFocusLoss
         draggable
         pauseOnHover
-        theme="light"
       />
     </>
   );

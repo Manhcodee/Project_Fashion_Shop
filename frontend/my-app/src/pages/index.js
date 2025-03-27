@@ -1,12 +1,15 @@
 import React, { useState, useEffect } from "react";
 import Link from 'next/link';
 import { useRouter } from 'next/router';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 import Header from "../components/home/Header";
 import Navigation from "../components/home/Navigation";
 import ProductCard from "../components/home/ProductCard";
 import Footer from "../components/home/Footer";
 import Pagination from "../components/common/Pagination";
-import api from "../services/api";
+import apiService from "../services/api";
 import styles from "../styles/Home.module.css";
 
 export default function Home() {
@@ -26,64 +29,133 @@ export default function Home() {
   // Sắp xếp
   const [sortOption, setSortOption] = useState('newest');
   const [displayProducts, setDisplayProducts] = useState([]);
+  
+  // Thông tin giỏ hàng và wishlist
+  const [cartCount, setCartCount] = useState(0);
+  const [wishlistCount, setWishlistCount] = useState(0);
 
   useEffect(() => {
     // Kiểm tra trạng thái đăng nhập
-    const userData = localStorage.getItem('user');
-    if (userData) {
-      setUser(JSON.parse(userData));
-    }
+    const checkAuth = async () => {
+      try {
+        const token = localStorage.getItem('token');
+        const userDataStr = localStorage.getItem('user');
+        
+        if (!token || !userDataStr) {
+          console.log("Không có token hoặc user data");
+          setUser(null);
+          return;
+        }
+
+        // Parse user data một cách an toàn
+        let userData;
+        try {
+          userData = JSON.parse(userDataStr);
+        } catch (parseError) {
+          console.error("Lỗi parse user data:", parseError);
+          localStorage.removeItem('token');
+          localStorage.removeItem('user');
+          setUser(null);
+          return;
+        }
+
+        // Kiểm tra token hợp lệ bằng API service
+        await apiService.checkAuthStatus();
+        setUser(userData);
+        // Lấy thông tin giỏ hàng và wishlist nếu đã đăng nhập
+        fetchCartAndWishlistCount();
+      } catch (error) {
+        console.error("Token không hợp lệ hoặc lỗi xác thực:", error);
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
+        setUser(null);
+        setCartCount(0);
+        setWishlistCount(0);
+      }
+    };
+
+    checkAuth();
   }, []);
+
+  const fetchCartAndWishlistCount = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      if (!token) return;
+
+      // Sử dụng API service để lấy dữ liệu
+      const [cartResponse, wishlistResponse] = await Promise.all([
+        apiService.getCart(),
+        apiService.getWishlist()
+      ]);
+
+      // Cập nhật số lượng giỏ hàng
+      if (cartResponse.data && cartResponse.data.items) {
+        setCartCount(cartResponse.data.items.length);
+      }
+
+      // Cập nhật số lượng wishlist
+      if (wishlistResponse.data) {
+        setWishlistCount(wishlistResponse.data.length);
+      }
+    } catch (error) {
+      console.error("Lỗi khi lấy thông tin giỏ hàng/wishlist:", error);
+      // Không cần hiển thị lỗi cho người dùng
+    }
+  };
 
   const handleLogout = () => {
     localStorage.removeItem('token');
     localStorage.removeItem('user');
     setUser(null);
+    setCartCount(0);
+    setWishlistCount(0);
     router.push('/');
+    toast.success('Đăng xuất thành công!');
   };
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         setLoading(true);
-        const response = await fetch('/api/products');
         
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
+        // Lấy tất cả sản phẩm
+        const productsResponse = await apiService.getProducts();
+        if (productsResponse.data) {
+          setProducts(productsResponse.data);
+          setTotalPages(Math.ceil(productsResponse.data.length / productsPerPage));
         }
         
-        const data = await response.json();
-        
-        if (!data || !Array.isArray(data)) {
-          throw new Error('Dữ liệu không hợp lệ');
+        // Lấy sản phẩm nổi bật
+        const featuredResponse = await apiService.getFeaturedProducts();
+        if (featuredResponse.data) {
+          setBestSellers(featuredResponse.data);
         }
-
-        console.log('Dữ liệu sản phẩm:', data); // Log để debug
-
-        // Xử lý dữ liệu sản phẩm
-        setProducts(data);
         
-        // Lọc sản phẩm nổi bật
-        const featured = data.filter(product => product.is_featured === 1);
-        setBestSellers(featured.length > 0 ? featured : data.slice(0, 4));
-        
-        // Lọc sản phẩm mới
-        const newItems = data.filter(product => product.is_new === 1);
-        setNewProducts(newItems.length > 0 ? newItems : data.slice(0, 4));
-        
-        // Tính tổng số trang
-        setTotalPages(Math.ceil(data.length / productsPerPage));
+        // Lấy sản phẩm mới
+        const newProductsResponse = await apiService.getNewProducts();
+        if (newProductsResponse.data) {
+          setNewProducts(newProductsResponse.data);
+        }
         
         setLoading(false);
       } catch (err) {
         console.error("Lỗi khi tải dữ liệu:", err);
-        setError(err.message);
+        setError("Không thể tải dữ liệu sản phẩm. Vui lòng thử lại sau.");
         setLoading(false);
       }
     };
 
     fetchData();
   }, []);
+
+  // Cập nhật lại số lượng giỏ hàng và wishlist khi thêm/xóa sản phẩm
+  const updateCartCount = (count) => {
+    setCartCount(count);
+  };
+
+  const updateWishlistCount = (count) => {
+    setWishlistCount(count);
+  };
 
   // Xử lý sắp xếp sản phẩm
   useEffect(() => {
@@ -147,12 +219,18 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
-      <Header user={user} onLogout={handleLogout} />
+      <ToastContainer position="top-right" autoClose={3000} />
+      <Header 
+        user={user} 
+        onLogout={handleLogout} 
+        cartCount={cartCount}
+        wishlistCount={wishlistCount}
+      />
       <Navigation />
 
       <main className="max-w-[1400px] mx-auto px-4 py-8">
         {/* Hero Section */}
-        <section className={styles.heroSection}>
+        <section className={styles.heroSection} style={{backgroundImage: 'linear-gradient(90deg, #1e3a8a, #3b82f6)'}}>
           <div className={styles.heroSectionContent}>
             <h1 className={styles.heroTitle}>
               Khám phá thế giới
@@ -233,7 +311,12 @@ export default function Home() {
               </div>
               <div className={styles.productGrid}>
                 {bestSellers.map((product) => (
-                  <ProductCard key={product.id} product={product} />
+                  <ProductCard 
+                    key={product.id} 
+                    product={product} 
+                    updateCartCount={updateCartCount}
+                    updateWishlistCount={updateWishlistCount}
+                  />
                 ))}
               </div>
             </div>
@@ -270,7 +353,12 @@ export default function Home() {
               </div>
               <div className={styles.productGrid}>
                 {newProducts.map((product) => (
-                  <ProductCard key={product.id} product={product} />
+                  <ProductCard 
+                    key={product.id} 
+                    product={product}
+                    updateCartCount={updateCartCount}
+                    updateWishlistCount={updateWishlistCount}
+                  />
                 ))}
               </div>
             </div>
@@ -304,7 +392,12 @@ export default function Home() {
             <>
               <div className={styles.productGrid}>
                 {getCurrentPageProducts().map((product) => (
-                  <ProductCard key={product.id} product={product} />
+                  <ProductCard 
+                    key={product.id} 
+                    product={product}
+                    updateCartCount={updateCartCount}
+                    updateWishlistCount={updateWishlistCount}
+                  />
                 ))}
               </div>
               {totalPages > 1 && (

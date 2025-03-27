@@ -17,19 +17,20 @@ public class CorsInterceptor implements HandlerInterceptor {
         logger.debug("CORS Interceptor handling request: {} {}", request.getMethod(), request.getRequestURI());
         
         // Thêm headers CORS
-        response.setHeader("Access-Control-Allow-Origin", "*");
-        response.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS, PATCH");
+        response.setHeader("Access-Control-Allow-Origin", "http://localhost:3000");
+        response.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
         response.setHeader("Access-Control-Allow-Headers", "*");
-        response.setHeader("Access-Control-Allow-Credentials", "false");
+        response.setHeader("Access-Control-Allow-Credentials", "true");
+        response.setHeader("Access-Control-Expose-Headers", "Authorization");
         response.setHeader("Access-Control-Max-Age", "3600");
         
-        // Xử lý riêng cho OPTIONS (preflight requests)
+        // Nếu là OPTIONS request, trả về OK luôn
         if ("OPTIONS".equalsIgnoreCase(request.getMethod())) {
             response.setStatus(HttpServletResponse.SC_OK);
             logger.debug("CORS Preflight request processed successfully");
-            return false; // Không tiếp tục xử lý yêu cầu OPTIONS
+            return false;
         }
         
-        return true; // Tiếp tục chuỗi xử lý
+        return true;
     }
 } 

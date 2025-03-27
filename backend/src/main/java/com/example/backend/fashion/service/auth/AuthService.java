@@ -105,14 +105,26 @@ public class AuthService {
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
-        String token = jwtTokenProvider.generateToken(user.getEmail());
+        // Tạo access token và refresh token
+        String accessToken = jwtTokenProvider.generateToken(user.getEmail());
+        String refreshToken = jwtTokenProvider.generateRefreshToken(user.getEmail());
+        LocalDateTime tokenExpiry = LocalDateTime.now().plusHours(24); // Token hết hạn sau 24h
+
+        // Lưu token vào database
+        user.setAccessToken(accessToken);
+        user.setRefreshToken(refreshToken);
+        user.setTokenExpiry(tokenExpiry);
+        userRepository.save(user);
 
         JwtAuthResponse jwtAuthResponse = new JwtAuthResponse();
-        jwtAuthResponse.setAccessToken(token);
+        jwtAuthResponse.setAccessToken(accessToken);
+        jwtAuthResponse.setRefreshToken(refreshToken);
+        jwtAuthResponse.setTokenExpiry(tokenExpiry);
         jwtAuthResponse.setEmail(user.getEmail());
         jwtAuthResponse.setFullName(user.getFullName());
         jwtAuthResponse.setRole(user.getRole());
         jwtAuthResponse.setVerified(user.isVerified());
+        jwtAuthResponse.setId(user.getId());
 
         return jwtAuthResponse;
     }
@@ -190,6 +202,55 @@ public class AuthService {
         user.setVerificationCode(null);
         user.setVerificationCodeExpiry(null);
         userRepository.save(user);
+    }
+
+    public void saveToken(SaveTokenRequest request) {
+        User user = userRepository.findById(request.getUserId())
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy người dùng"));
+
+        user.setAccessToken(request.getAccessToken());
+        user.setRefreshToken(request.getRefreshToken());
+        user.setTokenExpiry(request.getTokenExpiry());
+        userRepository.save(user);
+    }
+
+    public JwtAuthResponse refreshToken(RefreshTokenRequest request) {
+        User user = userRepository.findById(request.getUserId())
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy người dùng"));
+
+        // Kiểm tra refresh token
+        if (!user.getRefreshToken().equals(request.getRefreshToken())) {
+            throw new RuntimeException("Refresh token không hợp lệ");
+        }
+
+        // Kiểm tra thời hạn token
+        if (user.getTokenExpiry() != null && user.getTokenExpiry().isBefore(LocalDateTime.now())) {
+            throw new RuntimeException("Token đã hết hạn");
+        }
+
+        // Tạo access token mới
+        String newAccessToken = jwtTokenProvider.generateToken(user.getEmail());
+        String newRefreshToken = jwtTokenProvider.generateRefreshToken(user.getEmail());
+        LocalDateTime newTokenExpiry = LocalDateTime.now().plusHours(24);
+
+        // Lưu token mới vào database
+        user.setAccessToken(newAccessToken);
+        user.setRefreshToken(newRefreshToken);
+        user.setTokenExpiry(newTokenExpiry);
+        userRepository.save(user);
+
+        // Tạo response
+        JwtAuthResponse response = new JwtAuthResponse();
+        response.setAccessToken(newAccessToken);
+        response.setRefreshToken(newRefreshToken);
+        response.setTokenExpiry(newTokenExpiry);
+        response.setEmail(user.getEmail());
+        response.setFullName(user.getFullName());
+        response.setRole(user.getRole());
+        response.setVerified(user.isVerified());
+        response.setId(user.getId());
+
+        return response;
     }
 
     private User findUserByEmailOrPhone(String emailOrPhone) {

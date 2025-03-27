@@ -28,21 +28,17 @@ public class WebConfig implements WebMvcConfigurer {
     public void addInterceptors(InterceptorRegistry registry) {
         // Thêm CORS interceptor trước để xử lý CORS sớm
         registry.addInterceptor(corsInterceptor);
-        
-        // Sau đó thêm logging interceptor
-        registry.addInterceptor(loggingInterceptor);
     }
 
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
-                .allowedOriginPatterns("*")
-                .allowedOrigins("http://localhost:3000")
-                .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH", "HEAD")
-                .allowedHeaders("*")
-                .exposedHeaders("Authorization", "Access-Control-Allow-Origin", "Access-Control-Allow-Credentials")
-                .allowCredentials(true)
-                .maxAge(3600);
+            .allowedOrigins("http://localhost:3000")
+            .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
+            .allowedHeaders("*")
+            .allowCredentials(true)
+            .exposedHeaders("Authorization")
+            .maxAge(3600);
     }
     
     @Bean
@@ -50,24 +46,26 @@ public class WebConfig implements WebMvcConfigurer {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         CorsConfiguration config = new CorsConfiguration();
         
-        // Disable credentials since we're using JWT
-        config.setAllowCredentials(false);
+        // Cho phép credentials
+        config.setAllowCredentials(true);
         
-        // Allow all origins
-        config.addAllowedOrigin("*");
+        // Cho phép origin cụ thể
+        config.addAllowedOrigin("http://localhost:3000");
         
-        // Allow all headers
+        // Cho phép tất cả các headers
         config.addAllowedHeader("*");
         
-        // Allow all methods
-        config.addAllowedMethod("*");
+        // Cho phép các methods
+        config.addAllowedMethod("GET");
+        config.addAllowedMethod("POST");
+        config.addAllowedMethod("PUT");
+        config.addAllowedMethod("DELETE");
+        config.addAllowedMethod("OPTIONS");
         
-        // Set exposed headers
-        config.setExposedHeaders(
-                Arrays.asList("Authorization", "Content-Type", "Access-Control-Allow-Origin")
-        );
+        // Expose header Authorization
+        config.addExposedHeader("Authorization");
         
-        // Long preflight cache (1 hour)
+        // Cache CORS config trong 1 giờ
         config.setMaxAge(3600L);
         
         source.registerCorsConfiguration("/**", config);

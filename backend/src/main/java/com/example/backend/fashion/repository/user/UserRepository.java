@@ -18,6 +18,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
     Optional<User> findByGoogleId(String googleId);
     
     @Modifying
-    @Query("DELETE FROM User u WHERE u.enabled = false AND u.verificationCodeExpiry < :cutoffTime")
+    @Query("DELETE FROM User u WHERE u.isEnabled = false AND u.verificationCodeExpiry < :cutoffTime")
     int deleteUnverifiedUsersOlderThan(@Param("cutoffTime") LocalDateTime cutoffTime);
 } 

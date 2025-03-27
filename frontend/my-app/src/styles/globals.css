@@ -1,6 +1,7 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+/* Xóa các dòng Tailwind */
+/* @tailwind base; */
+/* @tailwind components; */
+/* @tailwind utilities; */
 
 * {
   margin: 0;

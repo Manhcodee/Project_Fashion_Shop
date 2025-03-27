@@ -1,10 +1,37 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
+import { FaHeart, FaShoppingCart, FaStar } from 'react-icons/fa';
+import { toast } from 'react-toastify';
+import apiService from '../../services/api';
 import styles from '../../styles/ProductCard.module.css';
 
-const ProductCard = ({ product }) => {
+const ProductCard = ({ product, updateCartCount, updateWishlistCount }) => {
+  const router = useRouter();
   const [isHovered, setIsHovered] = useState(false);
-  
+  const [isWishlisted, setIsWishlisted] = useState(false);
+  const [isAddingToCart, setIsAddingToCart] = useState(false);
+  const [isAddingToWishlist, setIsAddingToWishlist] = useState(false);
+
+  useEffect(() => {
+    // Kiểm tra xem sản phẩm có nằm trong wishlist không
+    const checkWishlistStatus = async () => {
+      if (!apiService.checkAuthStatus()) return;
+
+      try {
+        const response = await apiService.getWishlist();
+        if (response.data) {
+          const isInWishlist = response.data.some(item => item.productId === product.id);
+          setIsWishlisted(isInWishlist);
+        }
+      } catch (error) {
+        console.error("Lỗi khi kiểm tra trạng thái wishlist:", error);
+      }
+    };
+
+    checkWishlistStatus();
+  }, [product.id]);
+
   if (!product) return null;
   
   // Kiểm tra và định dạng các trường dữ liệu
@@ -24,7 +51,138 @@ const ProductCard = ({ product }) => {
     currency: 'VND',
     minimumFractionDigits: 0,
     maximumFractionDigits: 0
-  }).format(price * 23000);
+  }).format(price);
+
+  // Kiểm tra xác thực trước khi thực hiện hành động yêu cầu đăng nhập
+  const checkAuth = () => {
+    if (!apiService.checkAuthStatus()) {
+      toast.warning('Vui lòng đăng nhập để sử dụng tính năng này', {
+        autoClose: 3000,
+        pauseOnHover: true,
+        hideProgressBar: false
+      });
+      
+      // Chờ 2 giây rồi chuyển hướng đến trang đăng nhập
+      setTimeout(() => {
+        router.push('/sign-in');
+      }, 2000);
+      
+      return false;
+    }
+    return true;
+  };
+
+  // Xử lý thêm vào giỏ hàng
+  const handleAddToCart = async (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    if (!checkAuth()) return;
+    
+    if (isAddingToCart) return;
+
+    try {
+      setIsAddingToCart(true);
+      const response = await apiService.addToCart({
+        productId: product.id,
+        quantity: 1
+      });
+
+      if (response.data) {
+        toast.success('Đã thêm sản phẩm vào giỏ hàng!', {
+          autoClose: 3000,
+          pauseOnHover: true,
+          hideProgressBar: false
+        });
+        
+        // Cập nhật số lượng giỏ hàng nếu có hàm callback
+        if (updateCartCount) {
+          updateCartCount(response.data.items.length);
+        }
+      }
+    } catch (error) {
+      console.error("❌ Lỗi khi thêm vào giỏ hàng:", error);
+      
+      if (error.response?.status === 401) {
+        toast.error('Vui lòng đăng nhập để thêm sản phẩm vào giỏ hàng', {
+          autoClose: 3000,
+          pauseOnHover: true,
+          hideProgressBar: false
+        });
+      } else {
+        toast.error('Không thể thêm sản phẩm vào giỏ hàng', {
+          autoClose: 3000,
+          pauseOnHover: true,
+          hideProgressBar: false
+        });
+      }
+    } finally {
+      setIsAddingToCart(false);
+    }
+  };
+
+  // Xử lý thêm/xóa sản phẩm khỏi danh sách yêu thích
+  const handleToggleWishlist = async (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    if (!checkAuth()) return;
+    
+    if (isAddingToWishlist) return;
+
+    try {
+      setIsAddingToWishlist(true);
+      const response = await apiService.toggleWishlistItem({
+        productId: product.id
+      });
+
+      if (response.data) {
+        const newWishlistState = response.data.action === "added";
+        setIsWishlisted(newWishlistState);
+        
+        toast.success(
+          response.data.action === "added"
+            ? 'Đã thêm sản phẩm vào danh sách yêu thích!' 
+            : 'Đã xóa sản phẩm khỏi danh sách yêu thích!', 
+          {
+            autoClose: 3000,
+            pauseOnHover: true,
+            hideProgressBar: false
+          }
+        );
+        
+        // Cập nhật số lượng wishlist nếu có hàm callback
+        if (updateWishlistCount) {
+          try {
+            const wishlistResponse = await apiService.getWishlist();
+            if (wishlistResponse.data) {
+              updateWishlistCount(wishlistResponse.data.length);
+            }
+          } catch (error) {
+            console.error('Lỗi khi lấy danh sách yêu thích:', error);
+          }
+        }
+      }
+    } catch (error) {
+      console.error("❌ Lỗi khi cập nhật danh sách yêu thích:", error);
+      
+      if (error.response?.status === 401) {
+        toast.error('Vui lòng đăng nhập để sử dụng tính năng yêu thích', {
+          autoClose: 3000,
+          pauseOnHover: true,
+          hideProgressBar: false
+        });
+      } else {
+        toast.error('Không thể cập nhật danh sách yêu thích', {
+          autoClose: 3000,
+          pauseOnHover: true,
+          hideProgressBar: false
+        });
+      }
+    } finally {
+      setIsAddingToWishlist(false);
+    }
+  };
 
   return (
     <Link href={`/product/${id}`}>
@@ -40,34 +198,34 @@ const ProductCard = ({ product }) => {
             className={styles.productImage}
             loading="lazy"
           />
-          {product.is_featured === 1 && (
+          {product.is_featured && (
             <span className={styles.featuredBadge}>Nổi bật</span>
           )}
-          {product.is_new === 1 && (
+          {product.is_new && (
             <span className={styles.newBadge}>Mới</span>
           )}
           
           <div className={`${styles.actionButtons} ${isHovered ? styles.show : ''}`}>
-            <button className={styles.actionButton} title="Thêm vào giỏ hàng" onClick={(e) => {
-              e.preventDefault();
-              // Xử lý thêm vào giỏ hàng
-            }}>
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" 
-                  d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z">
-                </path>
-              </svg>
+            <button 
+              className={styles.actionButton} 
+              title="Thêm vào giỏ hàng" 
+              onClick={handleAddToCart} 
+              disabled={isAddingToCart}
+            >
+              <FaShoppingCart className={styles.actionIcon} />
             </button>
             
-            <button className={styles.actionButton} title="Thêm vào yêu thích" onClick={(e) => {
-              e.preventDefault();
-              // Xử lý thêm vào yêu thích
-            }}>
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" 
-                  d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z">
-                </path>
-              </svg>
+            <button 
+              className={styles.actionButton} 
+              title={isWishlisted ? "Xóa khỏi yêu thích" : "Thêm vào yêu thích"} 
+              onClick={handleToggleWishlist} 
+              disabled={isAddingToWishlist}
+            >
+              <FaHeart
+                className={`${styles.actionIcon} ${
+                  isWishlisted ? styles.wishlisted : ''
+                }`}
+              />
             </button>
           </div>
         </div>
@@ -85,7 +243,7 @@ const ProductCard = ({ product }) => {
                     currency: 'VND',
                     minimumFractionDigits: 0,
                     maximumFractionDigits: 0
-                  }).format(parseFloat(product.original_price) * 23000)}
+                  }).format(parseFloat(product.original_price))}
                 </span>
               )}
             </div>

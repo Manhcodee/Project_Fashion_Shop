@@ -146,9 +146,9 @@ const Footer = () => {
               © 2024 Fashion Shop. Tất cả quyền được bảo lưu.
             </p>
             <div className={styles.payments}>
-              <img src="/images/payment/visa.png" alt="Visa" className={styles.paymentIcon} />
-              <img src="/images/payment/mastercard.png" alt="Mastercard" className={styles.paymentIcon} />
-              <img src="/images/payment/paypal.png" alt="PayPal" className={styles.paymentIcon} />
+              <span className={styles.paymentIcon}>Visa</span>
+              <span className={styles.paymentIcon}>MasterCard</span>
+              <span className={styles.paymentIcon}>PayPal</span>
             </div>
           </div>
         </div>

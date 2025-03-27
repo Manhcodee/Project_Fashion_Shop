@@ -28,6 +28,8 @@ import { LockReset as LockResetIcon } from '@mui/icons-material';
 import { useEffect } from 'react';
 import { GoogleOAuthProvider, GoogleLogin } from '@react-oauth/google';
 import { jwtDecode } from 'jwt-decode';
+import { toast, Toaster } from 'react-hot-toast';
+import apiService from '../../services/apiService';
 
 const Card = styled(MuiCard)(({ theme }) => ({
   display: 'flex',
@@ -448,99 +450,54 @@ export default function SignIn(props) {
     setForgotPasswordSuccess('');
   };
 
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-  
-    if (!validateInputs()) return;
-  
-    setLoading(true);
-    setApiError('');
+  const handleSubmit = async (e) => {
+    e.preventDefault();
   
     try {
-      const loginPayload = {
-        emailOrPhone: formData.emailOrPhone,
-        password: formData.password,
-      };
-  
-      console.log('🔐 Gửi yêu cầu đăng nhập:', loginPayload);
-  
-      const response = await fetch('http://localhost:8080/api/auth/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(loginPayload),
-        signal: AbortSignal.timeout(5000),
-      });
-  
-      console.log('📥 Response Status:', response.status);
+      setLoading(true);
+      console.log("🔐 Gửi yêu cầu đăng nhập:", formData);
 
-      // Xử lý response 401
-      if (response.status === 401) {
-        setApiError('Tài khoản chưa được kích hoạt. Vui lòng kiểm tra email để xác thực tài khoản.');
-        setVerifyData({ ...verifyData, email: formData.emailOrPhone });
-        return;
-      }
+      const response = await apiService.login(formData);
+      console.log("📥 Response Status:", response.status);
 
-      // Xử lý các response khác
-      let data;
-      try {
-        data = await response.json();
-      } catch (err) {
-        console.error('Error parsing JSON:', err);
-        setApiError('Có lỗi xảy ra, vui lòng thử lại sau');
-        return;
-      }
-
-      if (!response.ok) {
-        // Kiểm tra các trường hợp lỗi cụ thể từ server
-        if (data.message && (
-          data.message.toLowerCase().includes('chưa được kích hoạt') || 
-          data.message.toLowerCase().includes('chưa được xác thực') ||
-          data.message.toLowerCase().includes('tài khoản chưa được kích hoạt')
-        )) {
-          setApiError('Tài khoản chưa được kích hoạt. Vui lòng kiểm tra email để xác thực tài khoản.');
-          setVerifyData({ ...verifyData, email: formData.emailOrPhone });
-          return;
-        }
+      if (response.status === 200 && response.data) {
+        const { token, user } = response.data;
         
-        // Các lỗi khác từ server
-        setApiError(data.message || 'Đăng nhập không thành công, vui lòng thử lại');
-        return;
-      }
+        // Lưu token và thông tin user vào localStorage
+        localStorage.setItem('token', token);
+        localStorage.setItem('user', JSON.stringify(user));
 
-      // Kiểm tra trạng thái xác thực từ response
-      if (!data.verified) {
-        setApiError('Tài khoản chưa được xác thực. Vui lòng kiểm tra email để xác thực tài khoản.');
-        setVerifyData({ ...verifyData, email: formData.emailOrPhone });
-        return;
+        // Thông báo thành công
+        toast.success('Đăng nhập thành công!', {
+          autoClose: 2000,
+          pauseOnHover: true
+        });
+
+        // Chuyển hướng sau khi đăng nhập thành công
+        setTimeout(() => {
+          router.push('/');
+        }, 2000);
+      } else if (response.status === 401) {
+        // Tài khoản chưa xác thực
+        toast.error('Tài khoản chưa được xác thực. Vui lòng kiểm tra email để xác thực.', {
+          autoClose: 5000,
+          pauseOnHover: true
+        });
       }
-  
-      // Đăng nhập thành công
-      localStorage.setItem('token', data.accessToken);
-      localStorage.setItem('user', JSON.stringify({
-        email: data.email,
-        fullName: data.fullName,
-        role: data.role,
-      }));
-  
-      // Điều hướng dựa trên role
-      if (data.role === 'ADMIN') {
-        router.push('/dashboard');
+    } catch (error) {
+      console.error("❌ Lỗi đăng nhập:", error);
+      
+      if (error.response?.status === 401) {
+        toast.error('Email hoặc mật khẩu không chính xác', {
+          autoClose: 3000,
+          pauseOnHover: true
+        });
       } else {
-        router.push('/');
+        toast.error('Có lỗi xảy ra khi đăng nhập. Vui lòng thử lại sau.', {
+          autoClose: 3000,
+          pauseOnHover: true
+        });
       }
-  
-    } catch (err) {
-      console.error('❌ Lỗi:', err);
-      setApiError('Đăng nhập thất bại, vui lòng thử lại');
-  
-      if (
-        err.message.includes('kết nối') ||
-        err.message.includes('không nhận được phản hồi') ||
-        err.message.includes('Failed to fetch')
-      ) {
-        setApiError('Không thể kết nối đến server. Hãy kiểm tra kết nối hoặc thử lại sau.');
-      }
-  
     } finally {
       setLoading(false);
     }
@@ -718,6 +675,7 @@ export default function SignIn(props) {
         />
       </div>
       <AppTheme {...props}>
+        <Toaster position="top-right" />
         <Head>
           <title>Đăng nhập</title>
         </Head>
