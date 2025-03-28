@@ -26,18 +26,18 @@ public class WebConfig implements WebMvcConfigurer {
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        // Thêm CORS interceptor trước để xử lý CORS sớm
-        registry.addInterceptor(corsInterceptor);
+        // Thêm logging interceptor
+        registry.addInterceptor(loggingInterceptor);
     }
 
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
-            .allowedOrigins("http://localhost:3000")
-            .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
+            .allowedOriginPatterns("*")  // Cho phép tất cả origins trong development
+            .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH")
             .allowedHeaders("*")
             .allowCredentials(true)
-            .exposedHeaders("Authorization")
+            .exposedHeaders("Authorization", "Content-Type")
             .maxAge(3600);
     }
     
@@ -49,21 +49,18 @@ public class WebConfig implements WebMvcConfigurer {
         // Cho phép credentials
         config.setAllowCredentials(true);
         
-        // Cho phép origin cụ thể
-        config.addAllowedOrigin("http://localhost:3000");
+        // Cho phép tất cả origins trong development
+        config.addAllowedOriginPattern("*");
         
         // Cho phép tất cả các headers
         config.addAllowedHeader("*");
         
         // Cho phép các methods
-        config.addAllowedMethod("GET");
-        config.addAllowedMethod("POST");
-        config.addAllowedMethod("PUT");
-        config.addAllowedMethod("DELETE");
-        config.addAllowedMethod("OPTIONS");
+        config.addAllowedMethod("*");
         
-        // Expose header Authorization
+        // Expose headers
         config.addExposedHeader("Authorization");
+        config.addExposedHeader("Content-Type");
         
         // Cache CORS config trong 1 giờ
         config.setMaxAge(3600L);

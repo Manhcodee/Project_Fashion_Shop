@@ -64,13 +64,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         // Kiểm tra token hợp lệ
         if(StringUtils.hasText(token) && jwtTokenProvider.validateToken(token)) {
-            // Lấy username từ token
-            String username = jwtTokenProvider.getUsername(token);
-            logger.debug("Username from token: {}", username);
+            // Lấy email từ token
+            String email = jwtTokenProvider.getEmailFromToken(token);
+            logger.debug("Email from token: {}", email);
 
             try {
                 // Tải thông tin người dùng
-                UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+                UserDetails userDetails = userDetailsService.loadUserByUsername(email);
 
                 // Tạo authentication object
                 UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
@@ -83,7 +83,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
                 // Set authentication vào SecurityContext
                 SecurityContextHolder.getContext().setAuthentication(authenticationToken);
-                logger.debug("Authentication set for user: {}", username);
+                logger.debug("Authentication set for user: {}", email);
             } catch (Exception e) {
                 logger.error("Authentication error: ", e);
             }

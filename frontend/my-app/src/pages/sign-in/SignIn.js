@@ -457,47 +457,76 @@ export default function SignIn(props) {
       setLoading(true);
       console.log("🔐 Gửi yêu cầu đăng nhập:", formData);
 
-      const response = await apiService.login(formData);
+      const response = await fetch('http://localhost:8080/api/auth/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
+        credentials: 'include',
+        body: JSON.stringify({
+          email: formData.emailOrPhone,
+          password: formData.password
+        })
+      });
+
       console.log("📥 Response Status:", response.status);
-
-      if (response.status === 200 && response.data) {
-        const { token, user } = response.data;
+      
+      let data;
+      try {
+        const text = await response.text();
+        console.log("📥 Response Text:", text);
         
-        // Lưu token và thông tin user vào localStorage
-        localStorage.setItem('token', token);
-        localStorage.setItem('user', JSON.stringify(user));
-
-        // Thông báo thành công
-        toast.success('Đăng nhập thành công!', {
-          autoClose: 2000,
-          pauseOnHover: true
-        });
-
-        // Chuyển hướng sau khi đăng nhập thành công
-        setTimeout(() => {
-          router.push('/');
-        }, 2000);
-      } else if (response.status === 401) {
-        // Tài khoản chưa xác thực
-        toast.error('Tài khoản chưa được xác thực. Vui lòng kiểm tra email để xác thực.', {
-          autoClose: 5000,
-          pauseOnHover: true
-        });
+        if (text) {
+          data = JSON.parse(text);
+          console.log("📥 Parsed Data:", data);
+        }
+      } catch (error) {
+        console.error("❌ Lỗi parse response:", error);
+        throw new Error("Không thể xử lý phản hồi từ server");
       }
+
+      if (!response.ok) {
+        if (response.status === 403) {
+          throw new Error("Không có quyền truy cập. Vui lòng kiểm tra thông tin đăng nhập.");
+        }
+        throw new Error(data?.message || 'Đăng nhập thất bại');
+      }
+
+      if (!data || !data.accessToken) {
+        throw new Error('Phản hồi không hợp lệ từ server');
+      }
+
+      // Kiểm tra trạng thái xác thực
+      if (data.verified === false) {
+        setApiError('Tài khoản chưa được xác thực. Vui lòng kiểm tra email để xác thực tài khoản.');
+        return;
+      }
+
+      // Lưu token và thông tin user vào localStorage
+      localStorage.setItem('token', data.accessToken);
+      localStorage.setItem('user', JSON.stringify({
+        id: data.id,
+        email: data.email,
+        fullName: data.fullName,
+        role: data.role
+      }));
+
+      // Thông báo thành công
+      toast.success('Đăng nhập thành công!');
+
+      // Chuyển hướng sau khi đăng nhập thành công
+      setTimeout(() => {
+        if (data.role === 'ADMIN') {
+          router.push('/dashboard');
+        } else {
+          router.push('/');
+        }
+      }, 1000);
+
     } catch (error) {
       console.error("❌ Lỗi đăng nhập:", error);
-      
-      if (error.response?.status === 401) {
-        toast.error('Email hoặc mật khẩu không chính xác', {
-          autoClose: 3000,
-          pauseOnHover: true
-        });
-      } else {
-        toast.error('Có lỗi xảy ra khi đăng nhập. Vui lòng thử lại sau.', {
-          autoClose: 3000,
-          pauseOnHover: true
-        });
-      }
+      setApiError(error.message || 'Đăng nhập thất bại. Vui lòng thử lại.');
     } finally {
       setLoading(false);
     }
@@ -663,6 +692,10 @@ export default function SignIn(props) {
   return (
     <GoogleOAuthProvider 
       clientId={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID}
+      onScriptLoadError={(error) => {
+        console.error('Google Sign-in script failed to load:', error);
+        setApiError('Không thể tải Google Sign-in. Vui lòng thử lại sau.');
+      }}
     >
       <div style={{ display: 'none' }}>
         <GoogleLogin 
@@ -672,6 +705,8 @@ export default function SignIn(props) {
           size="large"
           text="signin_with"
           shape="rectangular"
+          useOneTap={false}
+          auto_select={false}
         />
       </div>
       <AppTheme {...props}>

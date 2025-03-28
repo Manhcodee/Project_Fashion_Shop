@@ -114,9 +114,12 @@ public class AuthService {
         user.setAccessToken(accessToken);
         user.setRefreshToken(refreshToken);
         user.setTokenExpiry(tokenExpiry);
+        user.setLastLogin(LocalDateTime.now());
         userRepository.save(user);
 
+        // Tạo response
         JwtAuthResponse jwtAuthResponse = new JwtAuthResponse();
+        jwtAuthResponse.setId(user.getId());
         jwtAuthResponse.setAccessToken(accessToken);
         jwtAuthResponse.setRefreshToken(refreshToken);
         jwtAuthResponse.setTokenExpiry(tokenExpiry);
@@ -124,7 +127,6 @@ public class AuthService {
         jwtAuthResponse.setFullName(user.getFullName());
         jwtAuthResponse.setRole(user.getRole());
         jwtAuthResponse.setVerified(user.isVerified());
-        jwtAuthResponse.setId(user.getId());
 
         return jwtAuthResponse;
     }

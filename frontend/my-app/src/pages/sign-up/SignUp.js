@@ -189,74 +189,45 @@ export default function SignUp(props) {
       password: formData.password,
     };
   
-    console.log('🚀 Sending Request:', requestData);
+    console.log('🔐 Gửi yêu cầu đăng ký:', requestData);
   
     try {
-      let serverOffline = false;
-  
       const response = await fetch('http://localhost:8080/api/auth/register', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(requestData),
-        signal: AbortSignal.timeout(5000),
-      }).catch((err) => {
-        console.error('Network Error:', err);
-        serverOffline = true;
-  
-        if (err.name === 'AbortError') {
-          setApiError('Không nhận được phản hồi từ máy chủ, yêu cầu đã bị hủy sau thời gian chờ.');
-        } else if (err.name === 'TypeError' && err.message.includes('Failed to fetch')) {
-          setApiError('Không thể kết nối đến máy chủ. Vui lòng kiểm tra xem máy chủ đã khởi động chưa.');
-        } else {
-          setApiError('Lỗi kết nối đến máy chủ. Vui lòng thử lại sau.');
-        }
+        headers: { 
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
+        body: JSON.stringify(requestData)
       });
-  
-      if (serverOffline || !response) return;
-  
-      const contentType = response.headers.get('content-type');
-      let errorMessage = 'Đăng ký thất bại';
-  
-      if (contentType && contentType.includes('application/json')) {
-        const data = await response.json();
-        if (!response.ok) {
-          errorMessage = data.message || errorMessage;
-          setApiError(errorMessage);
-          return;
-        }
-        
-        // Xử lý phản hồi thành công
-        if (isEmailInput) {
-          setVerificationSent(true);
-          setApiSuccess('Đăng ký thành công! Vui lòng xác thực tài khoản qua email trước khi đăng nhập.');
-          // Chuyển hướng đến trang xác thực email
-          router.push(`/verify-email?email=${encodeURIComponent(formData.emailOrPhone)}`);
-        } else {
-          setApiSuccess('Đăng ký thành công!');
-          setTimeout(() => {
-            setApiSuccess(prev => prev + ' Chuyển hướng đến trang đăng nhập...');
-            setTimeout(() => router.push('/sign-in'), 1000);
-          }, 1000);
-        }
-      } else {
-        const text = await response.text();
-        if (!response.ok) {
-          errorMessage = text || errorMessage;
-          setApiError(errorMessage);
-          return;
-        }
+
+      const data = await response.json();
+      console.log('📥 Response Status:', response.status);
+      console.log('📥 Response Data:', data);
+
+      if (!response.ok) {
+        throw new Error(data.message || 'Đăng ký thất bại');
       }
-  
+
+      // Xử lý phản hồi thành công
+      if (isEmailInput) {
+        setVerificationSent(true);
+        setApiSuccess('Đăng ký thành công! Vui lòng xác thực tài khoản qua email trước khi đăng nhập.');
+        // Chuyển hướng đến trang xác thực email
+        router.push(`/verify-email?email=${encodeURIComponent(formData.emailOrPhone)}`);
+      } else {
+        setApiSuccess('Đăng ký thành công!');
+        setTimeout(() => {
+          setApiSuccess(prev => prev + ' Chuyển hướng đến trang đăng nhập...');
+          setTimeout(() => router.push('/sign-in'), 1000);
+        }, 1000);
+      }
     } catch (err) {
-      console.error('Lỗi không xác định:', err);
-      setApiError('Đã xảy ra lỗi không xác định. Vui lòng thử lại.');
-  
-      if (
-        err.message.includes('kết nối') ||
-        err.message.includes('không nhận được phản hồi') ||
-        err.message.includes('Failed to fetch')
-      ) {
-        setApiError(prev => prev + ' Bạn có thể dùng ứng dụng ở chế độ ngoại tuyến.');
+      console.error('❌ Lỗi:', err);
+      if (err.message === 'Failed to fetch') {
+        setApiError('Không thể kết nối đến máy chủ. Vui lòng kiểm tra kết nối mạng và thử lại.');
+      } else {
+        setApiError(err.message || 'Đã xảy ra lỗi. Vui lòng thử lại.');
       }
     } finally {
       setLoading(false);

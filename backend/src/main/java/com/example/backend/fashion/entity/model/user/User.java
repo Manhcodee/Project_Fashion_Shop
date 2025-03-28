@@ -75,11 +75,23 @@ public class User {
     @Column(name = "auth_provider", nullable = false)
     private AuthProvider authProvider = AuthProvider.LOCAL;
 
+    @Column(name = "access_token", columnDefinition = "TEXT")
+    private String accessToken;
+
+    @Column(name = "refresh_token", columnDefinition = "TEXT")
+    private String refreshToken;
+
+    @Column(name = "token_expiry")
+    private LocalDateTime tokenExpiry;
+
     @Column(name = "created_at")
     private LocalDateTime createdAt;
 
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
+
+    @Column(name = "last_login")
+    private LocalDateTime lastLogin;
 
     @PrePersist
     protected void onCreate() {

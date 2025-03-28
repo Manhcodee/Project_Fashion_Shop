@@ -66,9 +66,20 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<JwtAuthResponse> login(@RequestBody LoginDto loginDto) {
-        JwtAuthResponse response = authService.login(loginDto);
-        return ResponseEntity.ok(response);
+    public ResponseEntity<?> login(@RequestBody LoginDto loginDto) {
+        try {
+            log.info("Đang xử lý đăng nhập cho: {}", loginDto.getEmailOrPhone());
+            
+            JwtAuthResponse response = authService.login(loginDto);
+            log.info("Đăng nhập thành công cho: {}", loginDto.getEmailOrPhone());
+            
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            log.error("Lỗi đăng nhập cho {}: {}", loginDto.getEmailOrPhone(), e.getMessage());
+            return ResponseEntity
+                .status(HttpStatus.UNAUTHORIZED)
+                .body(new MessageResponse(e.getMessage()));
+        }
     }
 
     @PostMapping("/send-verification")
