@@ -49,8 +49,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         // Bỏ qua xác thực cho các API public
         if (requestURI.startsWith("/api/products") || 
-            requestURI.startsWith("/public/api/") || 
-            requestURI.equals("/public/api/products")) {
+            requestURI.startsWith("/api/cart") || 
+            requestURI.startsWith("/api/public/")) {
             
             logger.info("Skipping authentication for public API: {}", requestURI);
             addCorsHeaders(response);
@@ -93,9 +93,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     }
 
     private void addCorsHeaders(HttpServletResponse response) {
-        response.setHeader("Access-Control-Allow-Origin", "*");
-        response.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
-        response.setHeader("Access-Control-Allow-Headers", "*");
+        response.setHeader("Access-Control-Allow-Origin", "http://localhost:3000");
+        response.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS, PATCH");
+        response.setHeader("Access-Control-Allow-Headers", "Authorization, Content-Type, Accept, Origin, Access-Control-Allow-Origin");
+        response.setHeader("Access-Control-Allow-Credentials", "true");
+        response.setHeader("Access-Control-Expose-Headers", "Authorization, Content-Type");
         response.setHeader("Access-Control-Max-Age", "3600");
     }
 

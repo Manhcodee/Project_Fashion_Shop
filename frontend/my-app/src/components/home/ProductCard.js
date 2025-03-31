@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { FaHeart, FaShoppingCart, FaStar } from 'react-icons/fa';
 import { toast } from 'react-toastify';
-import apiService from '../../services/api';
+import api from '../../services/api';
 import styles from '../../styles/ProductCard.module.css';
 
 const ProductCard = ({ product, updateCartCount, updateWishlistCount }) => {
@@ -16,10 +16,10 @@ const ProductCard = ({ product, updateCartCount, updateWishlistCount }) => {
   useEffect(() => {
     // Kiểm tra xem sản phẩm có nằm trong wishlist không
     const checkWishlistStatus = async () => {
-      if (!apiService.checkAuthStatus()) return;
+      if (!api.checkAuthStatus()) return;
 
       try {
-        const response = await apiService.getWishlist();
+        const response = await api.getWishlist();
         if (response.data) {
           const isInWishlist = response.data.some(item => item.productId === product.id);
           setIsWishlisted(isInWishlist);
@@ -55,7 +55,7 @@ const ProductCard = ({ product, updateCartCount, updateWishlistCount }) => {
 
   // Kiểm tra xác thực trước khi thực hiện hành động yêu cầu đăng nhập
   const checkAuth = () => {
-    if (!apiService.checkAuthStatus()) {
+    if (!api.checkAuthStatus()) {
       toast.warning('Vui lòng đăng nhập để sử dụng tính năng này', {
         autoClose: 3000,
         pauseOnHover: true,
@@ -83,7 +83,7 @@ const ProductCard = ({ product, updateCartCount, updateWishlistCount }) => {
 
     try {
       setIsAddingToCart(true);
-      const response = await apiService.addToCart({
+      const response = await api.addToCart({
         productId: product.id,
         quantity: 1
       });
@@ -132,7 +132,7 @@ const ProductCard = ({ product, updateCartCount, updateWishlistCount }) => {
 
     try {
       setIsAddingToWishlist(true);
-      const response = await apiService.toggleWishlistItem({
+      const response = await api.toggleWishlistItem({
         productId: product.id
       });
 
@@ -154,7 +154,7 @@ const ProductCard = ({ product, updateCartCount, updateWishlistCount }) => {
         // Cập nhật số lượng wishlist nếu có hàm callback
         if (updateWishlistCount) {
           try {
-            const wishlistResponse = await apiService.getWishlist();
+            const wishlistResponse = await api.getWishlist();
             if (wishlistResponse.data) {
               updateWishlistCount(wishlistResponse.data.length);
             }

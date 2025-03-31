@@ -1,19 +1,18 @@
 /* ===== Header.module.css (Final Update) ===== */
 
 .header {
-  width: 100%;
-  background-color: #fff;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  background: white;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .topBar {
-  background-color: #f8f9fa;
+  background: #f3f4f6;
   padding: 8px 0;
-  border-bottom: 1px solid #ebebeb;
+  font-size: 0.9rem;
 }
 
 .container {
-  max-width: 1400px;
+  max-width: 1200px;
   margin: 0 auto;
   padding: 0 16px;
   display: flex;
@@ -23,9 +22,8 @@
 
 .contactInfo {
   display: flex;
-  gap: 20px;
-  font-size: 14px;
-  color: #666;
+  gap: 24px;
+  color: #4b5563;
 }
 
 .contactInfo span {
@@ -36,29 +34,39 @@
 .userActions {
   display: flex;
   gap: 16px;
-  align-items: center;
 }
 
-.userAction, .logoutButton {
+.userAction {
   display: flex;
   align-items: center;
-  font-size: 14px;
-  color: #666;
+  gap: 4px;
+  color: #4b5563;
   text-decoration: none;
   transition: color 0.2s;
-  background: none;
-  border: none;
-  cursor: pointer;
-  padding: 0;
 }
 
-.userAction:hover, .logoutButton:hover {
-  color: #f03e3e;
+.userAction:hover {
+  color: #1a56db;
 }
 
 .icon {
-  margin-right: 6px;
-  font-size: 16px;
+  font-size: 1.1rem;
+}
+
+.logoutButton {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  background: none;
+  border: none;
+  color: #4b5563;
+  cursor: pointer;
+  padding: 0;
+  font-size: 1rem;
+}
+
+.logoutButton:hover {
+  color: #e53e3e;
 }
 
 .mainHeader {
@@ -66,94 +74,94 @@
 }
 
 .logo {
-  font-size: 24px;
-  font-weight: 700;
-  color: #333;
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #1a56db;
   text-decoration: none;
 }
 
 .searchForm {
-  display: flex;
   flex: 1;
-  max-width: 500px;
-  margin: 0 24px;
+  max-width: 600px;
+  margin: 0 32px;
   position: relative;
 }
 
 .searchInput {
   width: 100%;
-  padding: 10px 16px;
-  border: 1px solid #ced4da;
-  border-radius: 4px;
-  font-size: 14px;
-  outline: none;
+  padding: 10px 40px 10px 16px;
+  border: 2px solid #e5e7eb;
+  border-radius: 8px;
+  font-size: 1rem;
   transition: border-color 0.2s;
 }
 
 .searchInput:focus {
-  border-color: #f03e3e;
+  outline: none;
+  border-color: #1a56db;
 }
 
 .searchButton {
   position: absolute;
-  right: 0;
-  top: 0;
-  bottom: 0;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
   background: none;
   border: none;
-  padding: 0 16px;
+  color: #4b5563;
   cursor: pointer;
-  color: #868e96;
-  transition: color 0.2s;
+  padding: 8px;
 }
 
 .searchButton:hover {
-  color: #f03e3e;
+  color: #1a56db;
 }
 
 .headerActions {
   display: flex;
-  align-items: center;
-  gap: 20px;
+  gap: 24px;
+}
+
+.actionWrapper {
+  position: relative;
 }
 
 .actionItem {
-  position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
+  gap: 4px;
+  color: #4b5563;
   text-decoration: none;
-  color: #333;
-  transition: color 0.2s;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
 }
 
 .actionItem:hover {
-  color: #f03e3e;
+  color: #1a56db;
 }
 
 .actionIcon {
-  font-size: 20px;
-  margin-bottom: 4px;
+  font-size: 1.5rem;
 }
 
 .actionText {
-  font-size: 12px;
+  font-size: 0.9rem;
 }
 
-.actionBadge, .cartCount {
+.actionBadge {
   position: absolute;
-  top: -5px;
-  right: -5px;
-  background-color: #f03e3e;
+  top: -8px;
+  right: -8px;
+  background: #e53e3e;
   color: white;
-  font-size: 10px;
-  font-weight: 600;
-  width: 18px;
-  height: 18px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  font-size: 0.8rem;
+  padding: 2px 6px;
+  border-radius: 12px;
+  min-width: 20px;
+  text-align: center;
 }
 
 /* Responsive */

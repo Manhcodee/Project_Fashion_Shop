@@ -7,7 +7,6 @@ import com.example.backend.fashion.service.user.UserService;
 import com.example.backend.fashion.service.wishlist.WishlistService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -23,17 +22,15 @@ public class WishlistController {
     private UserService userService;
 
     @GetMapping
-    public ResponseEntity<List<WishlistItemDTO>> getWishlist(Authentication authentication) {
-        User user = userService.getCurrentUser(authentication);
+    public ResponseEntity<List<WishlistItemDTO>> getWishlist() {
+        User user = userService.getCurrentUser();
         List<WishlistItemDTO> wishlist = wishlistService.getWishlistByUserId(user.getId());
         return ResponseEntity.ok(wishlist);
     }
 
     @PostMapping("/toggle")
-    public ResponseEntity<WishlistDTO> toggleWishlistItem(
-            @RequestBody WishlistItemDTO wishlistItemDTO,
-            Authentication authentication) {
-        User user = userService.getCurrentUser(authentication);
+    public ResponseEntity<WishlistDTO> toggleWishlistItem(@RequestBody WishlistItemDTO wishlistItemDTO) {
+        User user = userService.getCurrentUser();
         WishlistDTO result = wishlistService.toggleWishlistItem(user.getId(), wishlistItemDTO.getProductId());
         return ResponseEntity.ok(result);
     }

@@ -29,7 +29,7 @@ import { useEffect } from 'react';
 import { GoogleOAuthProvider, GoogleLogin } from '@react-oauth/google';
 import { jwtDecode } from 'jwt-decode';
 import { toast, Toaster } from 'react-hot-toast';
-import apiService from '../../services/apiService';
+import api from '../../services/api';
 
 const Card = styled(MuiCard)(({ theme }) => ({
   display: 'flex',

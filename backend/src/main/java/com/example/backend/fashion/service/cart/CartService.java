@@ -11,7 +11,11 @@ import com.example.backend.fashion.repository.cart.CartItemRepository;
 import com.example.backend.fashion.repository.cart.CartRepository;
 import com.example.backend.fashion.repository.products.ProductRepository;
 import com.example.backend.fashion.repository.user.UserRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,6 +26,8 @@ import java.util.stream.Collectors;
 
 @Service
 public class CartService {
+
+    private static final Logger logger = LoggerFactory.getLogger(CartService.class);
 
     @Autowired
     private CartRepository cartRepository;
@@ -35,9 +41,45 @@ public class CartService {
     @Autowired
     private ProductRepository productRepository;
 
-    public CartDTO getCartByUserId(Long userId) {
-        Cart cart = getOrCreateCart(userId);
-        return convertToDTO(cart);
+    public CartDTO getCart() {
+        try {
+            logger.info("Đang lấy thông tin giỏ hàng từ database");
+            User currentUser = getCurrentUser();
+            if (currentUser == null) {
+                logger.warn("Không tìm thấy người dùng hiện tại");
+                return null;
+            }
+            
+            Cart cart = cartRepository.findByUserId(currentUser.getId())
+                .orElseGet(() -> {
+                    logger.info("Tạo giỏ hàng mới cho người dùng");
+                    Cart newCart = new Cart();
+                    newCart.setUser(currentUser);
+                    return cartRepository.save(newCart);
+                });
+            
+            logger.info("Lấy thông tin giỏ hàng thành công");
+            return convertToDTO(cart);
+        } catch (Exception e) {
+            logger.error("Lỗi khi lấy thông tin giỏ hàng: {}", e.getMessage(), e);
+            throw new RuntimeException("Không thể lấy thông tin giỏ hàng", e);
+        }
+    }
+
+    private User getCurrentUser() {
+        try {
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            if (authentication == null || !authentication.isAuthenticated()) {
+                return null;
+            }
+
+            String email = authentication.getName();
+            return userRepository.findByEmail(email)
+                .orElse(null);
+        } catch (Exception e) {
+            logger.error("Lỗi khi lấy thông tin người dùng: {}", e.getMessage(), e);
+            return null;
+        }
     }
 
     @Transactional

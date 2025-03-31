@@ -24,11 +24,15 @@ public class ProductServiceImpl implements ProductService {
         try {
             logger.info("Fetching all products");
             List<Product> products = productRepository.findAll();
-            logger.info("Retrieved {} products", products.size());
+            if (products.isEmpty()) {
+                logger.warn("No products found in the database");
+            } else {
+                logger.info("Retrieved {} products", products.size());
+            }
             return products;
         } catch (Exception e) {
             logger.error("Error fetching all products: {}", e.getMessage(), e);
-            return Collections.emptyList();
+            throw new RuntimeException("Failed to fetch products", e);
         }
     }
 

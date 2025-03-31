@@ -10,10 +10,23 @@ import {
   FaEnvelope,
   FaSignOutAlt,
 } from 'react-icons/fa';
+import CartDropdown from './CartDropdown';
+import WishlistDropdown from './WishlistDropdown';
 import styles from '../../styles/Header.module.css';
 
-const Header = ({ user, onLogout, cartCount = 0, wishlistCount = 0 }) => {
+const Header = ({
+  user,
+  onLogout,
+  cartItems = [],
+  wishlistItems = [],
+  onUpdateCartQuantity,
+  onRemoveFromCart,
+  onRemoveFromWishlist,
+  onAddToCart
+}) => {
   const [searchQuery, setSearchQuery] = useState('');
+  const [showCartDropdown, setShowCartDropdown] = useState(false);
+  const [showWishlistDropdown, setShowWishlistDropdown] = useState(false);
   const router = useRouter();
 
   const handleSearch = (e) => {
@@ -21,6 +34,28 @@ const Header = ({ user, onLogout, cartCount = 0, wishlistCount = 0 }) => {
     if (searchQuery.trim()) {
       router.push(`/search?q=${encodeURIComponent(searchQuery.trim())}`);
     }
+  };
+
+  const handleCartClick = (e) => {
+    e.preventDefault();
+    setShowCartDropdown(!showCartDropdown);
+    setShowWishlistDropdown(false);
+  };
+
+  const handleWishlistClick = (e) => {
+    e.preventDefault();
+    setShowWishlistDropdown(!showWishlistDropdown);
+    setShowCartDropdown(false);
+  };
+
+  const handleViewCart = () => {
+    setShowCartDropdown(false);
+    router.push('/cart');
+  };
+
+  const handleViewWishlist = () => {
+    setShowWishlistDropdown(false);
+    router.push('/wishlist');
   };
 
   return (
@@ -83,17 +118,43 @@ const Header = ({ user, onLogout, cartCount = 0, wishlistCount = 0 }) => {
 
           {/* Actions */}
           <div className={styles.headerActions}>
-            <Link href="/wishlist" className={styles.actionItem}>
-              <FaHeart className={styles.actionIcon} />
-              <span className={styles.actionText}>Yêu thích</span>
-              {wishlistCount > 0 && <span className={styles.actionBadge}>{wishlistCount}</span>}
-            </Link>
+            <div className={styles.actionWrapper}>
+              <button onClick={handleWishlistClick} className={styles.actionItem}>
+                <FaHeart className={styles.actionIcon} />
+                <span className={styles.actionText}>Yêu thích</span>
+                {wishlistItems.length > 0 && (
+                  <span className={styles.actionBadge}>{wishlistItems.length}</span>
+                )}
+              </button>
+              {showWishlistDropdown && (
+                <WishlistDropdown
+                  items={wishlistItems}
+                  onRemoveItem={onRemoveFromWishlist}
+                  onAddToCart={onAddToCart}
+                  onClose={() => setShowWishlistDropdown(false)}
+                  onViewWishlist={handleViewWishlist}
+                />
+              )}
+            </div>
 
-            <Link href="/cart" className={styles.actionItem}>
-              <FaShoppingCart className={styles.actionIcon} />
-              <span className={styles.actionText}>Giỏ hàng</span>
-              {cartCount > 0 && <span className={styles.actionBadge}>{cartCount}</span>}
-            </Link>
+            <div className={styles.actionWrapper}>
+              <button onClick={handleCartClick} className={styles.actionItem}>
+                <FaShoppingCart className={styles.actionIcon} />
+                <span className={styles.actionText}>Giỏ hàng</span>
+                {cartItems.length > 0 && (
+                  <span className={styles.actionBadge}>{cartItems.length}</span>
+                )}
+              </button>
+              {showCartDropdown && (
+                <CartDropdown
+                  items={cartItems}
+                  onUpdateQuantity={onUpdateCartQuantity}
+                  onRemoveItem={onRemoveFromCart}
+                  onClose={() => setShowCartDropdown(false)}
+                  onViewCart={handleViewCart}
+                />
+              )}
+            </div>
           </div>
         </div>
       </div>

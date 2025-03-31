@@ -1,0 +1,499 @@
+2025-03-31 09:18:37,986 INFO o.h.v.i.u.Version [background-preinit] HV000001: Hibernate Validator 8.0.1.Final
+2025-03-31 09:18:38,059 INFO c.e.b.f.c.AppInitializer [restartedMain] ?ã t?i thành công file .env t?: D:\Projects\Project-fashion-shop\backend\.env
+2025-03-31 09:18:38,061 INFO c.e.b.f.c.AppInitializer [restartedMain] ?ã t?i bi?n môi tr??ng t? .env: GOOGLE_CLIENT_SECRET, MAIL_USERNAME, DB_USERNAME, JWT_SECRET, GOOGLE_CLIENT_ID, FACEBOOK_CLIENT_ID, DB_URL, FACEBOOK_CLIENT_SECRET, MAIL_PASSWORD, DB_PASSWORD
+2025-03-31 09:18:38,063 INFO c.e.b.f.c.AppInitializer [restartedMain] ?ã t?i thành công file .env t?: D:\Projects\Project-fashion-shop\backend\.env
+2025-03-31 09:18:38,064 INFO c.e.b.f.c.AppInitializer [restartedMain] ?ã t?i bi?n môi tr??ng t? .env: GOOGLE_CLIENT_SECRET, MAIL_USERNAME, DB_USERNAME, JWT_SECRET, GOOGLE_CLIENT_ID, FACEBOOK_CLIENT_ID, DB_URL, FACEBOOK_CLIENT_SECRET, MAIL_PASSWORD, DB_PASSWORD
+2025-03-31 09:18:38,082 INFO o.s.b.StartupInfoLogger [restartedMain] Starting BackendApplication using Java 17.0.14 with PID 6092 (D:\Projects\Project-fashion-shop\backend\target\classes started by manh in D:\Projects\Project-fashion-shop\backend)
+2025-03-31 09:18:38,084 DEBUG o.s.b.StartupInfoLogger [restartedMain] Running with Spring Boot v3.2.3, Spring v6.1.4
+2025-03-31 09:18:38,086 INFO o.s.b.SpringApplication [restartedMain] No active profile set, falling back to 1 default profile: "default"
+2025-03-31 09:18:38,149 INFO o.s.b.l.DeferredLog [restartedMain] Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2025-03-31 09:18:38,150 INFO o.s.b.l.DeferredLog [restartedMain] For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2025-03-31 09:18:38,370 INFO o.s.c.i.s.PropertySourceProcessor [restartedMain] Properties location [file:${user.dir}/../.env] not resolvable: D:\Projects\Project-fashion-shop\.env (The system cannot find the file specified)
+2025-03-31 09:18:38,372 INFO o.s.c.i.s.PropertySourceProcessor [restartedMain] Properties location [file:${user.dir}/backend/.env] not resolvable: D:\Projects\Project-fashion-shop\backend\backend\.env (The system cannot find the file specified)
+2025-03-31 09:18:39,337 INFO o.s.d.r.c.RepositoryConfigurationDelegate [restartedMain] Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-03-31 09:18:39,444 INFO o.s.d.r.c.RepositoryConfigurationDelegate [restartedMain] Finished Spring Data repository scanning in 94 ms. Found 6 JPA repository interfaces.
+2025-03-31 09:18:39,974 WARN o.s.c.s.PostProcessorRegistrationDelegate$BeanPostProcessorChecker [restartedMain] Bean 'org.springframework.ws.config.annotation.DelegatingWsConfiguration' of type [org.springframework.ws.config.annotation.DelegatingWsConfiguration$$SpringCGLIB$$0] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying). The currently created BeanPostProcessor [annotationActionEndpointMapping] is declared through a non-static factory method on that class; consider declaring it as static instead.
+2025-03-31 09:18:40,006 INFO o.s.w.s.a.s.AbstractAddressingEndpointMapping [restartedMain] Supporting [WS-Addressing August 2004, WS-Addressing 1.0]
+2025-03-31 09:18:40,475 INFO o.s.b.w.e.t.TomcatWebServer [restartedMain] Tomcat initialized with port 8080 (http)
+2025-03-31 09:18:40,489 INFO o.a.j.l.DirectJDKLog [restartedMain] Initializing ProtocolHandler ["http-nio-8080"]
+2025-03-31 09:18:40,492 INFO o.a.j.l.DirectJDKLog [restartedMain] Starting service [Tomcat]
+2025-03-31 09:18:40,493 INFO o.a.j.l.DirectJDKLog [restartedMain] Starting Servlet engine: [Apache Tomcat/10.1.19]
+2025-03-31 09:18:40,570 INFO o.a.j.l.DirectJDKLog [restartedMain] Initializing Spring embedded WebApplicationContext
+2025-03-31 09:18:40,572 INFO o.s.b.w.s.c.ServletWebServerApplicationContext [restartedMain] Root WebApplicationContext: initialization completed in 2419 ms
+2025-03-31 09:18:40,775 INFO o.h.j.i.u.LogHelper [restartedMain] HHH000204: Processing PersistenceUnitInfo [name: default]
+2025-03-31 09:18:40,841 INFO o.h.Version [restartedMain] HHH000412: Hibernate ORM core version 6.4.4.Final
+2025-03-31 09:18:40,893 INFO o.h.c.i.RegionFactoryInitiator [restartedMain] HHH000026: Second-level cache disabled
+2025-03-31 09:18:41,179 INFO o.s.o.j.p.SpringPersistenceUnitInfo [restartedMain] No LoadTimeWeaver setup: ignoring JPA class transformer
+2025-03-31 09:18:41,216 INFO c.z.h.HikariDataSource [restartedMain] HikariPool-1 - Starting...
+2025-03-31 09:18:41,401 INFO c.z.h.p.HikariPool [restartedMain] HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@6161e652
+2025-03-31 09:18:41,401 INFO c.z.h.HikariDataSource [restartedMain] HikariPool-1 - Start completed.
+2025-03-31 09:18:41,461 WARN o.h.e.j.d.i.DialectFactoryImpl [restartedMain] HHH90000025: MySQL8Dialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2025-03-31 09:18:41,463 WARN o.h.e.j.d.i.DialectFactoryImpl [restartedMain] HHH90000026: MySQL8Dialect has been deprecated; use org.hibernate.dialect.MySQLDialect instead
+2025-03-31 09:18:42,997 INFO o.h.e.t.j.p.i.JtaPlatformInitiator [restartedMain] HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2025-03-31 09:18:43,003 INFO o.s.o.j.AbstractEntityManagerFactoryBean [restartedMain] Initialized JPA EntityManagerFactory for persistence unit 'default'
+2025-03-31 09:18:43,441 INFO o.s.d.j.r.q.QueryEnhancerFactory [restartedMain] Hibernate is in classpath; If applicable, HQL parser will be used.
+2025-03-31 09:18:43,886 DEBUG o.s.w.f.GenericFilterBean [restartedMain] Filter 'jwtAuthenticationFilter' configured for use
+2025-03-31 09:18:43,888 DEBUG o.s.w.f.GenericFilterBean [restartedMain] Filter 'corsFilter' configured for use
+2025-03-31 09:18:44,549 WARN o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration [restartedMain] spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2025-03-31 09:18:44,791 DEBUG o.s.w.s.h.SimpleUrlHandlerMapping [restartedMain] Patterns [/ws/**] in 'stompWebSocketHandlerMapping'
+2025-03-31 09:18:44,994 DEBUG o.s.w.s.h.AbstractHandlerMethodMapping [restartedMain] 43 mappings in 'requestMappingHandlerMapping'
+2025-03-31 09:18:45,073 DEBUG o.s.w.s.h.SimpleUrlHandlerMapping [restartedMain] Patterns [/webjars/**, /**, /swagger-ui*/*swagger-initializer.js, /swagger-ui*/**] in 'resourceHandlerMapping'
+2025-03-31 09:18:45,140 INFO o.s.s.w.DefaultSecurityFilterChain [restartedMain] Will secure any request with [org.springframework.security.web.session.DisableEncodeUrlFilter@53691150, org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@1e579e6a, org.springframework.security.web.context.SecurityContextHolderFilter@683cdda6, org.springframework.security.web.header.HeaderWriterFilter@2385acec, org.springframework.web.filter.CorsFilter@3d09757b, org.springframework.security.web.authentication.logout.LogoutFilter@2f1a0b62, com.example.backend.fashion.security.JwtAuthenticationFilter@3effdf97, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@76428653, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@66880f5f, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@5e37d841, org.springframework.security.web.session.SessionManagementFilter@650bb05f, org.springframework.security.web.access.ExceptionTranslationFilter@2ec24382, org.springframework.security.web.access.intercept.AuthorizationFilter@7a86fea1]
+2025-03-31 09:18:45,269 DEBUG o.s.m.h.i.AbstractMethodMessageHandler [restartedMain] 
+	c.e.b.f.c.a.AuthController:
+	
+2025-03-31 09:18:45,270 DEBUG o.s.m.h.i.AbstractMethodMessageHandler [restartedMain] 
+	c.e.b.f.c.a.FacebookAuthController:
+	
+2025-03-31 09:18:45,272 DEBUG o.s.m.h.i.AbstractMethodMessageHandler [restartedMain] 
+	c.e.b.f.c.a.GoogleAuthController:
+	
+2025-03-31 09:18:45,273 DEBUG o.s.m.h.i.AbstractMethodMessageHandler [restartedMain] 
+	c.e.b.f.c.c.CartController:
+	
+2025-03-31 09:18:45,274 DEBUG o.s.m.h.i.AbstractMethodMessageHandler [restartedMain] 
+	c.e.b.f.c.p.ProductController:
+	
+2025-03-31 09:18:45,275 DEBUG o.s.m.h.i.AbstractMethodMessageHandler [restartedMain] 
+	c.e.b.f.c.p.PublicApiController:
+	
+2025-03-31 09:18:45,276 DEBUG o.s.m.h.i.AbstractMethodMessageHandler [restartedMain] 
+	c.e.b.f.c.t.EmailTestController:
+	
+2025-03-31 09:18:45,277 DEBUG o.s.m.h.i.AbstractMethodMessageHandler [restartedMain] 
+	c.e.b.f.c.t.MailTestController:
+	
+2025-03-31 09:18:45,278 DEBUG o.s.m.h.i.AbstractMethodMessageHandler [restartedMain] 
+	c.e.b.f.c.w.WishlistController:
+	
+2025-03-31 09:18:45,280 DEBUG o.s.m.h.i.AbstractMethodMessageHandler [restartedMain] 
+	o.s.b.a.w.s.e.BasicErrorController:
+	
+2025-03-31 09:18:45,282 DEBUG o.s.m.h.i.AbstractMethodMessageHandler [restartedMain] 
+	o.s.w.a.OpenApiWebMvcResource:
+	
+2025-03-31 09:18:45,284 DEBUG o.s.m.h.i.AbstractMethodMessageHandler [restartedMain] 
+	o.s.w.u.SwaggerWelcomeWebMvc:
+	
+2025-03-31 09:18:45,285 DEBUG o.s.m.h.i.AbstractMethodMessageHandler [restartedMain] 
+	o.s.w.u.SwaggerConfigResource:
+	
+2025-03-31 09:18:45,371 DEBUG o.s.w.s.m.m.a.RequestMappingHandlerAdapter [restartedMain] ControllerAdvice beans: 0 @ModelAttribute, 0 @InitBinder, 1 RequestBodyAdvice, 1 ResponseBodyAdvice
+2025-03-31 09:18:45,417 DEBUG o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver [restartedMain] ControllerAdvice beans: 2 @ExceptionHandler, 1 ResponseBodyAdvice
+2025-03-31 09:18:45,470 WARN o.s.b.a.t.ThymeleafAutoConfiguration$DefaultTemplateResolverConfiguration [restartedMain] Cannot find template location: classpath:/templates/ (please add some templates, check your Thymeleaf configuration, or set spring.thymeleaf.check-template-location=false)
+2025-03-31 09:18:45,772 INFO o.s.b.d.a.OptionalLiveReloadServer [restartedMain] LiveReload server is running on port 35729
+2025-03-31 09:18:45,797 INFO o.a.j.l.DirectJDKLog [restartedMain] Starting ProtocolHandler ["http-nio-8080"]
+2025-03-31 09:18:45,820 INFO o.s.b.w.e.t.TomcatWebServer [restartedMain] Tomcat started on port 8080 (http) with context path ''
+2025-03-31 09:18:45,824 DEBUG o.s.c.l.CompositeLog [restartedMain] clientOutboundChannel added SubProtocolWebSocketHandler[StompSubProtocolHandler[v10.stomp, v11.stomp, v12.stomp]]
+2025-03-31 09:18:45,825 DEBUG o.s.c.l.CompositeLog [restartedMain] clientInboundChannel added WebSocketAnnotationMethodMessageHandler[prefixes=[/app/]]
+2025-03-31 09:18:45,827 INFO o.s.c.l.CompositeLog [restartedMain] Starting...
+2025-03-31 09:18:45,827 DEBUG o.s.c.l.CompositeLog [restartedMain] clientInboundChannel added SimpleBrokerMessageHandler [org.springframework.messaging.simp.broker.DefaultSubscriptionRegistry@5f2586df]
+2025-03-31 09:18:45,828 DEBUG o.s.c.l.CompositeLog [restartedMain] brokerChannel added SimpleBrokerMessageHandler [org.springframework.messaging.simp.broker.DefaultSubscriptionRegistry@5f2586df]
+2025-03-31 09:18:45,829 INFO o.s.c.l.CompositeLog [restartedMain] BrokerAvailabilityEvent[available=true, SimpleBrokerMessageHandler [org.springframework.messaging.simp.broker.DefaultSubscriptionRegistry@5f2586df]]
+2025-03-31 09:18:45,831 INFO o.s.c.l.CompositeLog [restartedMain] Started.
+2025-03-31 09:18:45,832 DEBUG o.s.c.l.CompositeLog [restartedMain] clientInboundChannel added UserDestinationMessageHandler[DefaultUserDestinationResolver[prefix=/user/]]
+2025-03-31 09:18:45,833 DEBUG o.s.c.l.CompositeLog [restartedMain] brokerChannel added UserDestinationMessageHandler[DefaultUserDestinationResolver[prefix=/user/]]
+2025-03-31 09:18:45,847 INFO o.s.b.StartupInfoLogger [restartedMain] Started BackendApplication in 8.438 seconds (process running for 9.245)
+2025-03-31 09:18:45,853 INFO c.e.b.f.c.EnvConfig [restartedMain] ?ng d?ng ?ã kh?i ??ng thành công
+2025-03-31 09:18:45,854 INFO c.e.b.f.c.EnvConfig [restartedMain] Môi tr??ng hi?n t?i: null
+2025-03-31 09:18:45,855 INFO c.e.b.f.c.EnvConfig [restartedMain] Loading bi?n môi tr??ng t? file .env
+2025-03-31 09:18:45,855 INFO c.e.b.f.c.EnvConfig [restartedMain] ?ã t?i thành công file .env t?: D:\Projects\Project-fashion-shop\backend\.env
+2025-03-31 09:18:45,857 DEBUG c.e.b.f.c.EnvConfig [restartedMain] ?ã ??t bi?n môi tr??ng: JWT_SECRET = daf6****5dbb
+2025-03-31 09:18:45,858 DEBUG c.e.b.f.c.EnvConfig [restartedMain] ?ã ??t bi?n môi tr??ng: GOOGLE_CLIENT_ID = 6955****.com
+2025-03-31 09:18:45,859 DEBUG c.e.b.f.c.EnvConfig [restartedMain] ?ã ??t bi?n môi tr??ng: GOOGLE_CLIENT_SECRET = GOCS****KWQB
+2025-03-31 09:18:45,860 DEBUG c.e.b.f.c.EnvConfig [restartedMain] ?ã ??t bi?n môi tr??ng: FACEBOOK_CLIENT_ID = 1065****6326
+2025-03-31 09:18:45,861 DEBUG c.e.b.f.c.EnvConfig [restartedMain] ?ã ??t bi?n môi tr??ng: FACEBOOK_CLIENT_SECRET = 6706****5c55
+2025-03-31 09:18:45,862 DEBUG c.e.b.f.c.EnvConfig [restartedMain] ?ã ??t bi?n môi tr??ng: DB_USERNAME = ****
+2025-03-31 09:18:45,862 DEBUG c.e.b.f.c.EnvConfig [restartedMain] ?ã ??t bi?n môi tr??ng: DB_PASSWORD = ****
+2025-03-31 09:18:45,863 DEBUG c.e.b.f.c.EnvConfig [restartedMain] ?ã ??t bi?n môi tr??ng: MAIL_USERNAME = lvla****.com
+2025-03-31 09:18:45,865 DEBUG c.e.b.f.c.EnvConfig [restartedMain] ?ã ??t bi?n môi tr??ng: MAIL_PASSWORD = pjsz****ilvs
+2025-03-31 09:18:45,866 INFO c.e.b.f.c.EnvConfig [restartedMain] Google Client ID: 6955****.com
+2025-03-31 09:18:45,867 INFO c.e.b.f.c.EnvConfig [restartedMain] Facebook Client ID: 1065****6326
+2025-03-31 09:18:45,868 INFO c.e.b.f.c.EnvConfig [restartedMain] Database Username: ****
+2025-03-31 09:18:45,869 INFO c.e.b.f.c.EnvConfig [restartedMain] JWT Secret configured: Yes
+2025-03-31 09:18:45,869 INFO c.e.b.f.c.EnvConfig [restartedMain] Mail Username configured: Yes
+2025-03-31 09:18:45,870 INFO c.e.b.f.c.EnvConfig [restartedMain] Spring Google Client ID: 6955****.com
+2025-03-31 09:18:45,871 INFO c.e.b.f.c.EnvConfig [restartedMain] Spring Facebook Client ID: 1065****6326
+2025-03-31 09:18:45,933 DEBUG o.h.e.j.s.SqlStatementLogger [MessageBroker-1] 
+    delete 
+    from
+        users 
+    where
+        is_enabled=0 
+        and verification_code_expiry<?
+2025-03-31 09:19:31,633 DEBUG o.s.c.l.CompositeLog [SpringApplicationShutdownHook] clientOutboundChannel removed SubProtocolWebSocketHandler[StompSubProtocolHandler[v10.stomp, v11.stomp, v12.stomp]]
+2025-03-31 09:19:31,634 DEBUG o.s.c.l.CompositeLog [SpringApplicationShutdownHook] clientInboundChannel removed WebSocketAnnotationMethodMessageHandler[prefixes=[/app/]]
+2025-03-31 09:19:31,635 INFO o.s.c.l.CompositeLog [SpringApplicationShutdownHook] Stopping...
+2025-03-31 09:19:31,635 INFO o.s.c.l.CompositeLog [SpringApplicationShutdownHook] BrokerAvailabilityEvent[available=false, SimpleBrokerMessageHandler [org.springframework.messaging.simp.broker.DefaultSubscriptionRegistry@5f2586df]]
+2025-03-31 09:19:31,636 DEBUG o.s.c.l.CompositeLog [SpringApplicationShutdownHook] clientInboundChannel removed SimpleBrokerMessageHandler [org.springframework.messaging.simp.broker.DefaultSubscriptionRegistry@5f2586df]
+2025-03-31 09:19:31,637 DEBUG o.s.c.l.CompositeLog [SpringApplicationShutdownHook] brokerChannel removed SimpleBrokerMessageHandler [org.springframework.messaging.simp.broker.DefaultSubscriptionRegistry@5f2586df]
+2025-03-31 09:19:31,638 INFO o.s.c.l.CompositeLog [SpringApplicationShutdownHook] Stopped.
+2025-03-31 09:19:31,638 DEBUG o.s.c.l.CompositeLog [SpringApplicationShutdownHook] clientInboundChannel removed UserDestinationMessageHandler[DefaultUserDestinationResolver[prefix=/user/]]
+2025-03-31 09:19:31,639 DEBUG o.s.c.l.CompositeLog [SpringApplicationShutdownHook] brokerChannel removed UserDestinationMessageHandler[DefaultUserDestinationResolver[prefix=/user/]]
+2025-03-31 09:19:31,655 INFO o.s.o.j.AbstractEntityManagerFactoryBean [SpringApplicationShutdownHook] Closing JPA EntityManagerFactory for persistence unit 'default'
+2025-03-31 09:19:31,660 INFO c.z.h.HikariDataSource [SpringApplicationShutdownHook] HikariPool-1 - Shutdown initiated...
+2025-03-31 09:19:31,666 INFO c.z.h.HikariDataSource [SpringApplicationShutdownHook] HikariPool-1 - Shutdown completed.
+2025-03-31 09:34:20,052 INFO o.h.v.i.u.Version [background-preinit] HV000001: Hibernate Validator 8.0.1.Final
+2025-03-31 09:34:20,088 INFO c.e.b.f.c.AppInitializer [main] ?ã t?i thành công file .env t?: D:\Projects\Project-fashion-shop\backend\.env
+2025-03-31 09:34:20,090 INFO c.e.b.f.c.AppInitializer [main] ?ã t?i bi?n môi tr??ng t? .env: GOOGLE_CLIENT_SECRET, MAIL_USERNAME, DB_USERNAME, JWT_SECRET, GOOGLE_CLIENT_ID, FACEBOOK_CLIENT_ID, DB_URL, FACEBOOK_CLIENT_SECRET, MAIL_PASSWORD, DB_PASSWORD
+2025-03-31 09:34:20,129 INFO o.s.b.StartupInfoLogger [main] Starting BackendApplicationTests using Java 17.0.14 with PID 8300 (started by manh in D:\Projects\Project-fashion-shop\backend)
+2025-03-31 09:34:20,129 DEBUG o.s.b.StartupInfoLogger [main] Running with Spring Boot v3.2.3, Spring v6.1.4
+2025-03-31 09:34:20,134 INFO o.s.b.SpringApplication [main] No active profile set, falling back to 1 default profile: "default"
+2025-03-31 09:34:20,202 DEBUG o.s.c.s.AbstractApplicationContext [main] Refreshing org.springframework.web.context.support.GenericWebApplicationContext@29182679
+2025-03-31 09:34:20,541 INFO o.s.c.i.s.PropertySourceProcessor [main] Properties location [file:${user.dir}/../.env] not resolvable: D:\Projects\Project-fashion-shop\.env (The system cannot find the file specified)
+2025-03-31 09:34:20,543 INFO o.s.c.i.s.PropertySourceProcessor [main] Properties location [file:${user.dir}/backend/.env] not resolvable: D:\Projects\Project-fashion-shop\backend\backend\.env (The system cannot find the file specified)
+2025-03-31 09:34:22,216 INFO o.s.d.r.c.RepositoryConfigurationDelegate [main] Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-03-31 09:34:22,393 INFO o.s.d.r.c.RepositoryConfigurationDelegate [main] Finished Spring Data repository scanning in 155 ms. Found 6 JPA repository interfaces.
+2025-03-31 09:34:23,367 WARN o.s.c.s.PostProcessorRegistrationDelegate$BeanPostProcessorChecker [main] Bean 'org.springframework.ws.config.annotation.DelegatingWsConfiguration' of type [org.springframework.ws.config.annotation.DelegatingWsConfiguration$$SpringCGLIB$$0] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying). The currently created BeanPostProcessor [annotationActionEndpointMapping] is declared through a non-static factory method on that class; consider declaring it as static instead.
+2025-03-31 09:34:23,428 INFO o.s.w.s.a.s.AbstractAddressingEndpointMapping [main] Supporting [WS-Addressing August 2004, WS-Addressing 1.0]
+2025-03-31 09:34:24,120 INFO o.h.j.i.u.LogHelper [main] HHH000204: Processing PersistenceUnitInfo [name: default]
+2025-03-31 09:34:24,266 INFO o.h.Version [main] HHH000412: Hibernate ORM core version 6.4.4.Final
+2025-03-31 09:34:24,355 INFO o.h.c.i.RegionFactoryInitiator [main] HHH000026: Second-level cache disabled
+2025-03-31 09:34:24,978 INFO o.s.o.j.p.SpringPersistenceUnitInfo [main] No LoadTimeWeaver setup: ignoring JPA class transformer
+2025-03-31 09:34:25,032 INFO c.z.h.HikariDataSource [main] HikariPool-1 - Starting...
+2025-03-31 09:34:25,375 INFO c.z.h.p.HikariPool [main] HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@73da303e
+2025-03-31 09:34:25,381 INFO c.z.h.HikariDataSource [main] HikariPool-1 - Start completed.
+2025-03-31 09:34:25,491 WARN o.h.e.j.d.i.DialectFactoryImpl [main] HHH90000025: MySQL8Dialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2025-03-31 09:34:25,496 WARN o.h.e.j.d.i.DialectFactoryImpl [main] HHH90000026: MySQL8Dialect has been deprecated; use org.hibernate.dialect.MySQLDialect instead
+2025-03-31 09:34:27,527 INFO o.h.e.t.j.p.i.JtaPlatformInitiator [main] HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2025-03-31 09:34:27,533 INFO o.s.o.j.AbstractEntityManagerFactoryBean [main] Initialized JPA EntityManagerFactory for persistence unit 'default'
+2025-03-31 09:34:28,288 INFO o.s.d.j.r.q.QueryEnhancerFactory [main] Hibernate is in classpath; If applicable, HQL parser will be used.
+2025-03-31 09:34:30,248 WARN o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration [main] spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2025-03-31 09:34:30,736 DEBUG o.s.w.s.h.SimpleUrlHandlerMapping [main] Patterns [/ws/**] in 'stompWebSocketHandlerMapping'
+2025-03-31 09:34:30,975 DEBUG o.s.w.s.h.AbstractHandlerMethodMapping [main] 43 mappings in 'requestMappingHandlerMapping'
+2025-03-31 09:34:31,141 DEBUG o.s.w.s.h.SimpleUrlHandlerMapping [main] Patterns [/webjars/**, /**, /swagger-ui*/*swagger-initializer.js, /swagger-ui*/**] in 'resourceHandlerMapping'
+2025-03-31 09:34:31,228 INFO o.s.s.w.DefaultSecurityFilterChain [main] Will secure any request with [org.springframework.security.web.session.DisableEncodeUrlFilter@34612ba9, org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@765611c9, org.springframework.security.web.context.SecurityContextHolderFilter@1030ce34, org.springframework.security.web.header.HeaderWriterFilter@14021c10, org.springframework.web.filter.CorsFilter@33f2ac11, org.springframework.security.web.authentication.logout.LogoutFilter@36bf903c, com.example.backend.fashion.security.JwtAuthenticationFilter@327af731, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@3eea7c4b, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@50d507ab, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@44b860b1, org.springframework.security.web.session.SessionManagementFilter@7f336491, org.springframework.security.web.access.ExceptionTranslationFilter@5344b208, org.springframework.security.web.access.intercept.AuthorizationFilter@217c7135]
+2025-03-31 09:34:31,416 DEBUG o.s.m.h.i.AbstractMethodMessageHandler [main] 
+	c.e.b.f.c.a.AuthController:
+	
+2025-03-31 09:34:31,418 DEBUG o.s.m.h.i.AbstractMethodMessageHandler [main] 
+	c.e.b.f.c.a.FacebookAuthController:
+	
+2025-03-31 09:34:31,419 DEBUG o.s.m.h.i.AbstractMethodMessageHandler [main] 
+	c.e.b.f.c.a.GoogleAuthController:
+	
+2025-03-31 09:34:31,420 DEBUG o.s.m.h.i.AbstractMethodMessageHandler [main] 
+	c.e.b.f.c.c.CartController:
+	
+2025-03-31 09:34:31,421 DEBUG o.s.m.h.i.AbstractMethodMessageHandler [main] 
+	c.e.b.f.c.p.ProductController:
+	
+2025-03-31 09:34:31,421 DEBUG o.s.m.h.i.AbstractMethodMessageHandler [main] 
+	c.e.b.f.c.p.PublicApiController:
+	
+2025-03-31 09:34:31,422 DEBUG o.s.m.h.i.AbstractMethodMessageHandler [main] 
+	c.e.b.f.c.t.EmailTestController:
+	
+2025-03-31 09:34:31,423 DEBUG o.s.m.h.i.AbstractMethodMessageHandler [main] 
+	c.e.b.f.c.t.MailTestController:
+	
+2025-03-31 09:34:31,424 DEBUG o.s.m.h.i.AbstractMethodMessageHandler [main] 
+	c.e.b.f.c.w.WishlistController:
+	
+2025-03-31 09:34:31,426 DEBUG o.s.m.h.i.AbstractMethodMessageHandler [main] 
+	o.s.b.a.w.s.e.BasicErrorController:
+	
+2025-03-31 09:34:31,428 DEBUG o.s.m.h.i.AbstractMethodMessageHandler [main] 
+	o.s.w.a.OpenApiWebMvcResource:
+	
+2025-03-31 09:34:31,429 DEBUG o.s.m.h.i.AbstractMethodMessageHandler [main] 
+	o.s.w.u.SwaggerWelcomeWebMvc:
+	
+2025-03-31 09:34:31,430 DEBUG o.s.m.h.i.AbstractMethodMessageHandler [main] 
+	o.s.w.u.SwaggerConfigResource:
+	
+2025-03-31 09:34:31,778 DEBUG o.s.w.s.m.m.a.RequestMappingHandlerAdapter [main] ControllerAdvice beans: 0 @ModelAttribute, 0 @InitBinder, 1 RequestBodyAdvice, 1 ResponseBodyAdvice
+2025-03-31 09:34:31,864 DEBUG o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver [main] ControllerAdvice beans: 2 @ExceptionHandler, 1 ResponseBodyAdvice
+2025-03-31 09:34:31,940 WARN o.s.b.a.t.ThymeleafAutoConfiguration$DefaultTemplateResolverConfiguration [main] Cannot find template location: classpath:/templates/ (please add some templates, check your Thymeleaf configuration, or set spring.thymeleaf.check-template-location=false)
+2025-03-31 09:34:32,449 DEBUG o.s.c.l.CompositeLog [main] clientOutboundChannel added SubProtocolWebSocketHandler[StompSubProtocolHandler[v10.stomp, v11.stomp, v12.stomp]]
+2025-03-31 09:34:32,451 DEBUG o.s.c.l.CompositeLog [main] clientInboundChannel added WebSocketAnnotationMethodMessageHandler[prefixes=[/app/]]
+2025-03-31 09:34:32,452 INFO o.s.c.l.CompositeLog [main] Starting...
+2025-03-31 09:34:32,453 DEBUG o.s.c.l.CompositeLog [main] clientInboundChannel added SimpleBrokerMessageHandler [org.springframework.messaging.simp.broker.DefaultSubscriptionRegistry@31a8b0bb]
+2025-03-31 09:34:32,454 DEBUG o.s.c.l.CompositeLog [main] brokerChannel added SimpleBrokerMessageHandler [org.springframework.messaging.simp.broker.DefaultSubscriptionRegistry@31a8b0bb]
+2025-03-31 09:34:32,458 INFO o.s.c.l.CompositeLog [main] BrokerAvailabilityEvent[available=true, SimpleBrokerMessageHandler [org.springframework.messaging.simp.broker.DefaultSubscriptionRegistry@31a8b0bb]]
+2025-03-31 09:34:32,460 INFO o.s.c.l.CompositeLog [main] Started.
+2025-03-31 09:34:32,462 DEBUG o.s.c.l.CompositeLog [main] clientInboundChannel added UserDestinationMessageHandler[DefaultUserDestinationResolver[prefix=/user/]]
+2025-03-31 09:34:32,463 DEBUG o.s.c.l.CompositeLog [main] brokerChannel added UserDestinationMessageHandler[DefaultUserDestinationResolver[prefix=/user/]]
+2025-03-31 09:34:32,492 INFO o.s.b.StartupInfoLogger [main] Started BackendApplicationTests in 13.115 seconds (process running for 15.768)
+2025-03-31 09:34:32,500 INFO c.e.b.f.c.EnvConfig [main] ?ng d?ng ?ã kh?i ??ng thành công
+2025-03-31 09:34:32,502 INFO c.e.b.f.c.EnvConfig [main] Môi tr??ng hi?n t?i: null
+2025-03-31 09:34:32,503 INFO c.e.b.f.c.EnvConfig [main] Loading bi?n môi tr??ng t? file .env
+2025-03-31 09:34:32,505 INFO c.e.b.f.c.EnvConfig [main] ?ã t?i thành công file .env t?: D:\Projects\Project-fashion-shop\backend\.env
+2025-03-31 09:34:32,507 DEBUG c.e.b.f.c.EnvConfig [main] ?ã ??t bi?n môi tr??ng: JWT_SECRET = daf6****5dbb
+2025-03-31 09:34:32,508 DEBUG c.e.b.f.c.EnvConfig [main] ?ã ??t bi?n môi tr??ng: GOOGLE_CLIENT_ID = 6955****.com
+2025-03-31 09:34:32,509 DEBUG c.e.b.f.c.EnvConfig [main] ?ã ??t bi?n môi tr??ng: GOOGLE_CLIENT_SECRET = GOCS****KWQB
+2025-03-31 09:34:32,510 DEBUG c.e.b.f.c.EnvConfig [main] ?ã ??t bi?n môi tr??ng: FACEBOOK_CLIENT_ID = 1065****6326
+2025-03-31 09:34:32,512 DEBUG c.e.b.f.c.EnvConfig [main] ?ã ??t bi?n môi tr??ng: FACEBOOK_CLIENT_SECRET = 6706****5c55
+2025-03-31 09:34:32,513 DEBUG c.e.b.f.c.EnvConfig [main] ?ã ??t bi?n môi tr??ng: DB_USERNAME = ****
+2025-03-31 09:34:32,515 DEBUG c.e.b.f.c.EnvConfig [main] ?ã ??t bi?n môi tr??ng: DB_PASSWORD = ****
+2025-03-31 09:34:32,516 DEBUG c.e.b.f.c.EnvConfig [main] ?ã ??t bi?n môi tr??ng: MAIL_USERNAME = lvla****.com
+2025-03-31 09:34:32,517 DEBUG c.e.b.f.c.EnvConfig [main] ?ã ??t bi?n môi tr??ng: MAIL_PASSWORD = pjsz****ilvs
+2025-03-31 09:34:32,518 INFO c.e.b.f.c.EnvConfig [main] Google Client ID: 6955****.com
+2025-03-31 09:34:32,519 INFO c.e.b.f.c.EnvConfig [main] Facebook Client ID: 1065****6326
+2025-03-31 09:34:32,520 INFO c.e.b.f.c.EnvConfig [main] Database Username: ****
+2025-03-31 09:34:32,521 INFO c.e.b.f.c.EnvConfig [main] JWT Secret configured: Yes
+2025-03-31 09:34:32,524 INFO c.e.b.f.c.EnvConfig [main] Mail Username configured: Yes
+2025-03-31 09:34:32,526 INFO c.e.b.f.c.EnvConfig [main] Spring Google Client ID: 6955****.com
+2025-03-31 09:34:32,531 INFO c.e.b.f.c.EnvConfig [main] Spring Facebook Client ID: 1065****6326
+2025-03-31 09:34:32,691 DEBUG o.h.e.j.s.SqlStatementLogger [MessageBroker-1] 
+    delete 
+    from
+        users 
+    where
+        is_enabled=0 
+        and verification_code_expiry<?
+2025-03-31 09:34:33,863 DEBUG o.s.c.s.AbstractApplicationContext [SpringApplicationShutdownHook] Closing org.springframework.web.context.support.GenericWebApplicationContext@29182679, started on Mon Mar 31 09:34:20 ICT 2025
+2025-03-31 09:34:33,873 DEBUG o.s.c.l.CompositeLog [SpringApplicationShutdownHook] clientOutboundChannel removed SubProtocolWebSocketHandler[StompSubProtocolHandler[v10.stomp, v11.stomp, v12.stomp]]
+2025-03-31 09:34:33,874 DEBUG o.s.c.l.CompositeLog [SpringApplicationShutdownHook] clientInboundChannel removed WebSocketAnnotationMethodMessageHandler[prefixes=[/app/]]
+2025-03-31 09:34:33,875 INFO o.s.c.l.CompositeLog [SpringApplicationShutdownHook] Stopping...
+2025-03-31 09:34:33,876 INFO o.s.c.l.CompositeLog [SpringApplicationShutdownHook] BrokerAvailabilityEvent[available=false, SimpleBrokerMessageHandler [org.springframework.messaging.simp.broker.DefaultSubscriptionRegistry@31a8b0bb]]
+2025-03-31 09:34:33,877 DEBUG o.s.c.l.CompositeLog [SpringApplicationShutdownHook] clientInboundChannel removed SimpleBrokerMessageHandler [org.springframework.messaging.simp.broker.DefaultSubscriptionRegistry@31a8b0bb]
+2025-03-31 09:34:33,877 DEBUG o.s.c.l.CompositeLog [SpringApplicationShutdownHook] brokerChannel removed SimpleBrokerMessageHandler [org.springframework.messaging.simp.broker.DefaultSubscriptionRegistry@31a8b0bb]
+2025-03-31 09:34:33,878 INFO o.s.c.l.CompositeLog [SpringApplicationShutdownHook] Stopped.
+2025-03-31 09:34:33,878 DEBUG o.s.c.l.CompositeLog [SpringApplicationShutdownHook] clientInboundChannel removed UserDestinationMessageHandler[DefaultUserDestinationResolver[prefix=/user/]]
+2025-03-31 09:34:33,879 DEBUG o.s.c.l.CompositeLog [SpringApplicationShutdownHook] brokerChannel removed UserDestinationMessageHandler[DefaultUserDestinationResolver[prefix=/user/]]
+2025-03-31 09:34:33,892 INFO o.s.o.j.AbstractEntityManagerFactoryBean [SpringApplicationShutdownHook] Closing JPA EntityManagerFactory for persistence unit 'default'
+2025-03-31 09:34:33,898 INFO c.z.h.HikariDataSource [SpringApplicationShutdownHook] HikariPool-1 - Shutdown initiated...
+2025-03-31 09:34:33,915 INFO c.z.h.HikariDataSource [SpringApplicationShutdownHook] HikariPool-1 - Shutdown completed.
+2025-03-31 09:36:36,404 INFO o.h.v.i.u.Version [background-preinit] HV000001: Hibernate Validator 8.0.1.Final
+2025-03-31 09:36:36,457 INFO c.e.b.f.c.AppInitializer [restartedMain] ?ã t?i thành công file .env t?: D:\Projects\Project-fashion-shop\backend\.env
+2025-03-31 09:36:36,458 INFO c.e.b.f.c.AppInitializer [restartedMain] ?ã t?i bi?n môi tr??ng t? .env: GOOGLE_CLIENT_SECRET, MAIL_USERNAME, DB_USERNAME, JWT_SECRET, GOOGLE_CLIENT_ID, FACEBOOK_CLIENT_ID, DB_URL, FACEBOOK_CLIENT_SECRET, MAIL_PASSWORD, DB_PASSWORD
+2025-03-31 09:36:36,460 INFO c.e.b.f.c.AppInitializer [restartedMain] ?ã t?i thành công file .env t?: D:\Projects\Project-fashion-shop\backend\.env
+2025-03-31 09:36:36,461 INFO c.e.b.f.c.AppInitializer [restartedMain] ?ã t?i bi?n môi tr??ng t? .env: GOOGLE_CLIENT_SECRET, MAIL_USERNAME, DB_USERNAME, JWT_SECRET, GOOGLE_CLIENT_ID, FACEBOOK_CLIENT_ID, DB_URL, FACEBOOK_CLIENT_SECRET, MAIL_PASSWORD, DB_PASSWORD
+2025-03-31 09:36:36,473 INFO o.s.b.StartupInfoLogger [restartedMain] Starting BackendApplication using Java 17.0.14 with PID 13740 (D:\Projects\Project-fashion-shop\backend\target\classes started by manh in D:\Projects\Project-fashion-shop\backend)
+2025-03-31 09:36:36,474 DEBUG o.s.b.StartupInfoLogger [restartedMain] Running with Spring Boot v3.2.3, Spring v6.1.4
+2025-03-31 09:36:36,476 INFO o.s.b.SpringApplication [restartedMain] No active profile set, falling back to 1 default profile: "default"
+2025-03-31 09:36:36,528 INFO o.s.b.l.DeferredLog [restartedMain] Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2025-03-31 09:36:36,530 INFO o.s.b.l.DeferredLog [restartedMain] For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2025-03-31 09:36:36,712 INFO o.s.c.i.s.PropertySourceProcessor [restartedMain] Properties location [file:${user.dir}/../.env] not resolvable: D:\Projects\Project-fashion-shop\.env (The system cannot find the file specified)
+2025-03-31 09:36:36,713 INFO o.s.c.i.s.PropertySourceProcessor [restartedMain] Properties location [file:${user.dir}/backend/.env] not resolvable: D:\Projects\Project-fashion-shop\backend\backend\.env (The system cannot find the file specified)
+2025-03-31 09:36:37,571 INFO o.s.d.r.c.RepositoryConfigurationDelegate [restartedMain] Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-03-31 09:36:37,654 INFO o.s.d.r.c.RepositoryConfigurationDelegate [restartedMain] Finished Spring Data repository scanning in 74 ms. Found 6 JPA repository interfaces.
+2025-03-31 09:36:38,038 WARN o.s.c.s.PostProcessorRegistrationDelegate$BeanPostProcessorChecker [restartedMain] Bean 'org.springframework.ws.config.annotation.DelegatingWsConfiguration' of type [org.springframework.ws.config.annotation.DelegatingWsConfiguration$$SpringCGLIB$$0] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying). The currently created BeanPostProcessor [annotationActionEndpointMapping] is declared through a non-static factory method on that class; consider declaring it as static instead.
+2025-03-31 09:36:38,064 INFO o.s.w.s.a.s.AbstractAddressingEndpointMapping [restartedMain] Supporting [WS-Addressing August 2004, WS-Addressing 1.0]
+2025-03-31 09:36:38,460 INFO o.s.b.w.e.t.TomcatWebServer [restartedMain] Tomcat initialized with port 8080 (http)
+2025-03-31 09:36:38,470 INFO o.a.j.l.DirectJDKLog [restartedMain] Initializing ProtocolHandler ["http-nio-8080"]
+2025-03-31 09:36:38,473 INFO o.a.j.l.DirectJDKLog [restartedMain] Starting service [Tomcat]
+2025-03-31 09:36:38,474 INFO o.a.j.l.DirectJDKLog [restartedMain] Starting Servlet engine: [Apache Tomcat/10.1.19]
+2025-03-31 09:36:38,548 INFO o.a.j.l.DirectJDKLog [restartedMain] Initializing Spring embedded WebApplicationContext
+2025-03-31 09:36:38,551 INFO o.s.b.w.s.c.ServletWebServerApplicationContext [restartedMain] Root WebApplicationContext: initialization completed in 2018 ms
+2025-03-31 09:36:38,769 INFO o.h.j.i.u.LogHelper [restartedMain] HHH000204: Processing PersistenceUnitInfo [name: default]
+2025-03-31 09:36:38,839 INFO o.h.Version [restartedMain] HHH000412: Hibernate ORM core version 6.4.4.Final
+2025-03-31 09:36:38,880 INFO o.h.c.i.RegionFactoryInitiator [restartedMain] HHH000026: Second-level cache disabled
+2025-03-31 09:36:39,167 INFO o.s.o.j.p.SpringPersistenceUnitInfo [restartedMain] No LoadTimeWeaver setup: ignoring JPA class transformer
+2025-03-31 09:36:39,200 INFO c.z.h.HikariDataSource [restartedMain] HikariPool-1 - Starting...
+2025-03-31 09:36:39,373 INFO c.z.h.p.HikariPool [restartedMain] HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@35fb5667
+2025-03-31 09:36:39,376 INFO c.z.h.HikariDataSource [restartedMain] HikariPool-1 - Start completed.
+2025-03-31 09:36:39,422 WARN o.h.e.j.d.i.DialectFactoryImpl [restartedMain] HHH90000025: MySQL8Dialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2025-03-31 09:36:39,424 WARN o.h.e.j.d.i.DialectFactoryImpl [restartedMain] HHH90000026: MySQL8Dialect has been deprecated; use org.hibernate.dialect.MySQLDialect instead
+2025-03-31 09:36:40,577 INFO o.h.e.t.j.p.i.JtaPlatformInitiator [restartedMain] HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2025-03-31 09:36:40,582 INFO o.s.o.j.AbstractEntityManagerFactoryBean [restartedMain] Initialized JPA EntityManagerFactory for persistence unit 'default'
+2025-03-31 09:36:40,909 INFO o.s.d.j.r.q.QueryEnhancerFactory [restartedMain] Hibernate is in classpath; If applicable, HQL parser will be used.
+2025-03-31 09:36:41,446 DEBUG o.s.w.f.GenericFilterBean [restartedMain] Filter 'jwtAuthenticationFilter' configured for use
+2025-03-31 09:36:41,448 DEBUG o.s.w.f.GenericFilterBean [restartedMain] Filter 'corsFilter' configured for use
+2025-03-31 09:36:42,188 WARN o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration [restartedMain] spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2025-03-31 09:36:42,507 DEBUG o.s.w.s.h.SimpleUrlHandlerMapping [restartedMain] Patterns [/ws/**] in 'stompWebSocketHandlerMapping'
+2025-03-31 09:36:42,666 DEBUG o.s.w.s.h.AbstractHandlerMethodMapping [restartedMain] 43 mappings in 'requestMappingHandlerMapping'
+2025-03-31 09:36:42,724 DEBUG o.s.w.s.h.SimpleUrlHandlerMapping [restartedMain] Patterns [/webjars/**, /**, /swagger-ui*/*swagger-initializer.js, /swagger-ui*/**] in 'resourceHandlerMapping'
+2025-03-31 09:36:42,793 INFO o.s.s.w.DefaultSecurityFilterChain [restartedMain] Will secure any request with [org.springframework.security.web.session.DisableEncodeUrlFilter@1e579e6a, org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@3d09757b, org.springframework.security.web.context.SecurityContextHolderFilter@500d01b6, org.springframework.security.web.header.HeaderWriterFilter@341d827e, org.springframework.web.filter.CorsFilter@5e37d841, org.springframework.security.web.authentication.logout.LogoutFilter@12ea8454, com.example.backend.fashion.security.JwtAuthenticationFilter@36add308, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@66880f5f, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@68573fc5, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@45cfa146, org.springframework.security.web.session.SessionManagementFilter@6949e400, org.springframework.security.web.access.ExceptionTranslationFilter@110890ef, org.springframework.security.web.access.intercept.AuthorizationFilter@1c57e54e]
+2025-03-31 09:36:42,910 DEBUG o.s.m.h.i.AbstractMethodMessageHandler [restartedMain] 
+	c.e.b.f.c.a.AuthController:
+	
+2025-03-31 09:36:42,912 DEBUG o.s.m.h.i.AbstractMethodMessageHandler [restartedMain] 
+	c.e.b.f.c.a.FacebookAuthController:
+	
+2025-03-31 09:36:42,913 DEBUG o.s.m.h.i.AbstractMethodMessageHandler [restartedMain] 
+	c.e.b.f.c.a.GoogleAuthController:
+	
+2025-03-31 09:36:42,913 DEBUG o.s.m.h.i.AbstractMethodMessageHandler [restartedMain] 
+	c.e.b.f.c.c.CartController:
+	
+2025-03-31 09:36:42,914 DEBUG o.s.m.h.i.AbstractMethodMessageHandler [restartedMain] 
+	c.e.b.f.c.p.ProductController:
+	
+2025-03-31 09:36:42,915 DEBUG o.s.m.h.i.AbstractMethodMessageHandler [restartedMain] 
+	c.e.b.f.c.p.PublicApiController:
+	
+2025-03-31 09:36:42,916 DEBUG o.s.m.h.i.AbstractMethodMessageHandler [restartedMain] 
+	c.e.b.f.c.t.EmailTestController:
+	
+2025-03-31 09:36:42,917 DEBUG o.s.m.h.i.AbstractMethodMessageHandler [restartedMain] 
+	c.e.b.f.c.t.MailTestController:
+	
+2025-03-31 09:36:42,918 DEBUG o.s.m.h.i.AbstractMethodMessageHandler [restartedMain] 
+	c.e.b.f.c.w.WishlistController:
+	
+2025-03-31 09:36:42,919 DEBUG o.s.m.h.i.AbstractMethodMessageHandler [restartedMain] 
+	o.s.b.a.w.s.e.BasicErrorController:
+	
+2025-03-31 09:36:42,921 DEBUG o.s.m.h.i.AbstractMethodMessageHandler [restartedMain] 
+	o.s.w.a.OpenApiWebMvcResource:
+	
+2025-03-31 09:36:42,922 DEBUG o.s.m.h.i.AbstractMethodMessageHandler [restartedMain] 
+	o.s.w.u.SwaggerWelcomeWebMvc:
+	
+2025-03-31 09:36:42,923 DEBUG o.s.m.h.i.AbstractMethodMessageHandler [restartedMain] 
+	o.s.w.u.SwaggerConfigResource:
+	
+2025-03-31 09:36:43,019 DEBUG o.s.w.s.m.m.a.RequestMappingHandlerAdapter [restartedMain] ControllerAdvice beans: 0 @ModelAttribute, 0 @InitBinder, 1 RequestBodyAdvice, 1 ResponseBodyAdvice
+2025-03-31 09:36:43,076 DEBUG o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver [restartedMain] ControllerAdvice beans: 2 @ExceptionHandler, 1 ResponseBodyAdvice
+2025-03-31 09:36:43,125 WARN o.s.b.a.t.ThymeleafAutoConfiguration$DefaultTemplateResolverConfiguration [restartedMain] Cannot find template location: classpath:/templates/ (please add some templates, check your Thymeleaf configuration, or set spring.thymeleaf.check-template-location=false)
+2025-03-31 09:36:43,414 WARN o.s.b.d.a.OptionalLiveReloadServer [restartedMain] Unable to start LiveReload server
+2025-03-31 09:36:43,438 INFO o.a.j.l.DirectJDKLog [restartedMain] Starting ProtocolHandler ["http-nio-8080"]
+2025-03-31 09:36:43,445 WARN o.s.c.s.AbstractApplicationContext [restartedMain] Exception encountered during context initialization - cancelling refresh attempt: org.springframework.context.ApplicationContextException: Failed to start bean 'webServerStartStop'
+2025-03-31 09:36:43,458 INFO o.s.o.j.AbstractEntityManagerFactoryBean [restartedMain] Closing JPA EntityManagerFactory for persistence unit 'default'
+2025-03-31 09:36:43,463 INFO c.z.h.HikariDataSource [restartedMain] HikariPool-1 - Shutdown initiated...
+2025-03-31 09:36:43,471 INFO c.z.h.HikariDataSource [restartedMain] HikariPool-1 - Shutdown completed.
+2025-03-31 09:36:43,488 INFO o.s.b.a.l.ConditionEvaluationReportLogger [restartedMain] 
+
+Error starting ApplicationContext. To display the condition evaluation report re-run your application with 'debug' enabled.
+2025-03-31 09:36:43,513 ERROR o.s.b.d.LoggingFailureAnalysisReporter [restartedMain] 
+
+***************************
+APPLICATION FAILED TO START
+***************************
+
+Description:
+
+Web server failed to start. Port 8080 was already in use.
+
+Action:
+
+Identify and stop the process that's listening on port 8080 or configure this application to listen on another port.
+
+2025-03-31 09:37:53,539 INFO o.h.v.i.u.Version [background-preinit] HV000001: Hibernate Validator 8.0.1.Final
+2025-03-31 09:37:53,594 INFO c.e.b.f.c.AppInitializer [restartedMain] ?ã t?i thành công file .env t?: D:\Projects\Project-fashion-shop\backend\.env
+2025-03-31 09:37:53,596 INFO c.e.b.f.c.AppInitializer [restartedMain] ?ã t?i bi?n môi tr??ng t? .env: GOOGLE_CLIENT_SECRET, MAIL_USERNAME, DB_USERNAME, JWT_SECRET, GOOGLE_CLIENT_ID, FACEBOOK_CLIENT_ID, DB_URL, FACEBOOK_CLIENT_SECRET, MAIL_PASSWORD, DB_PASSWORD
+2025-03-31 09:37:53,597 INFO c.e.b.f.c.AppInitializer [restartedMain] ?ã t?i thành công file .env t?: D:\Projects\Project-fashion-shop\backend\.env
+2025-03-31 09:37:53,598 INFO c.e.b.f.c.AppInitializer [restartedMain] ?ã t?i bi?n môi tr??ng t? .env: GOOGLE_CLIENT_SECRET, MAIL_USERNAME, DB_USERNAME, JWT_SECRET, GOOGLE_CLIENT_ID, FACEBOOK_CLIENT_ID, DB_URL, FACEBOOK_CLIENT_SECRET, MAIL_PASSWORD, DB_PASSWORD
+2025-03-31 09:37:53,610 INFO o.s.b.StartupInfoLogger [restartedMain] Starting BackendApplication using Java 17.0.14 with PID 10272 (D:\Projects\Project-fashion-shop\backend\target\classes started by manh in D:\Projects\Project-fashion-shop\backend)
+2025-03-31 09:37:53,611 DEBUG o.s.b.StartupInfoLogger [restartedMain] Running with Spring Boot v3.2.3, Spring v6.1.4
+2025-03-31 09:37:53,613 INFO o.s.b.SpringApplication [restartedMain] No active profile set, falling back to 1 default profile: "default"
+2025-03-31 09:37:53,678 INFO o.s.b.l.DeferredLog [restartedMain] Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2025-03-31 09:37:53,679 INFO o.s.b.l.DeferredLog [restartedMain] For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2025-03-31 09:37:53,922 INFO o.s.c.i.s.PropertySourceProcessor [restartedMain] Properties location [file:${user.dir}/../.env] not resolvable: D:\Projects\Project-fashion-shop\.env (The system cannot find the file specified)
+2025-03-31 09:37:53,924 INFO o.s.c.i.s.PropertySourceProcessor [restartedMain] Properties location [file:${user.dir}/backend/.env] not resolvable: D:\Projects\Project-fashion-shop\backend\backend\.env (The system cannot find the file specified)
+2025-03-31 09:37:54,823 INFO o.s.d.r.c.RepositoryConfigurationDelegate [restartedMain] Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-03-31 09:37:54,945 INFO o.s.d.r.c.RepositoryConfigurationDelegate [restartedMain] Finished Spring Data repository scanning in 112 ms. Found 6 JPA repository interfaces.
+2025-03-31 09:37:55,400 WARN o.s.c.s.PostProcessorRegistrationDelegate$BeanPostProcessorChecker [restartedMain] Bean 'org.springframework.ws.config.annotation.DelegatingWsConfiguration' of type [org.springframework.ws.config.annotation.DelegatingWsConfiguration$$SpringCGLIB$$0] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying). The currently created BeanPostProcessor [annotationActionEndpointMapping] is declared through a non-static factory method on that class; consider declaring it as static instead.
+2025-03-31 09:37:55,427 INFO o.s.w.s.a.s.AbstractAddressingEndpointMapping [restartedMain] Supporting [WS-Addressing August 2004, WS-Addressing 1.0]
+2025-03-31 09:37:55,870 INFO o.s.b.w.e.t.TomcatWebServer [restartedMain] Tomcat initialized with port 8080 (http)
+2025-03-31 09:37:55,882 INFO o.a.j.l.DirectJDKLog [restartedMain] Initializing ProtocolHandler ["http-nio-8080"]
+2025-03-31 09:37:55,886 INFO o.a.j.l.DirectJDKLog [restartedMain] Starting service [Tomcat]
+2025-03-31 09:37:55,887 INFO o.a.j.l.DirectJDKLog [restartedMain] Starting Servlet engine: [Apache Tomcat/10.1.19]
+2025-03-31 09:37:55,956 INFO o.a.j.l.DirectJDKLog [restartedMain] Initializing Spring embedded WebApplicationContext
+2025-03-31 09:37:55,958 INFO o.s.b.w.s.c.ServletWebServerApplicationContext [restartedMain] Root WebApplicationContext: initialization completed in 2277 ms
+2025-03-31 09:37:56,133 INFO o.h.j.i.u.LogHelper [restartedMain] HHH000204: Processing PersistenceUnitInfo [name: default]
+2025-03-31 09:37:56,197 INFO o.h.Version [restartedMain] HHH000412: Hibernate ORM core version 6.4.4.Final
+2025-03-31 09:37:56,246 INFO o.h.c.i.RegionFactoryInitiator [restartedMain] HHH000026: Second-level cache disabled
+2025-03-31 09:37:56,519 INFO o.s.o.j.p.SpringPersistenceUnitInfo [restartedMain] No LoadTimeWeaver setup: ignoring JPA class transformer
+2025-03-31 09:37:56,553 INFO c.z.h.HikariDataSource [restartedMain] HikariPool-1 - Starting...
+2025-03-31 09:37:56,738 INFO c.z.h.p.HikariPool [restartedMain] HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@1888463c
+2025-03-31 09:37:56,742 INFO c.z.h.HikariDataSource [restartedMain] HikariPool-1 - Start completed.
+2025-03-31 09:37:56,792 WARN o.h.e.j.d.i.DialectFactoryImpl [restartedMain] HHH90000025: MySQL8Dialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2025-03-31 09:37:56,794 WARN o.h.e.j.d.i.DialectFactoryImpl [restartedMain] HHH90000026: MySQL8Dialect has been deprecated; use org.hibernate.dialect.MySQLDialect instead
+2025-03-31 09:37:58,040 INFO o.h.e.t.j.p.i.JtaPlatformInitiator [restartedMain] HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2025-03-31 09:37:58,044 INFO o.s.o.j.AbstractEntityManagerFactoryBean [restartedMain] Initialized JPA EntityManagerFactory for persistence unit 'default'
+2025-03-31 09:37:58,399 INFO o.s.d.j.r.q.QueryEnhancerFactory [restartedMain] Hibernate is in classpath; If applicable, HQL parser will be used.
+2025-03-31 09:37:58,877 DEBUG o.s.w.f.GenericFilterBean [restartedMain] Filter 'jwtAuthenticationFilter' configured for use
+2025-03-31 09:37:58,878 DEBUG o.s.w.f.GenericFilterBean [restartedMain] Filter 'corsFilter' configured for use
+2025-03-31 09:37:59,530 WARN o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration [restartedMain] spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2025-03-31 09:37:59,891 DEBUG o.s.w.s.h.SimpleUrlHandlerMapping [restartedMain] Patterns [/ws/**] in 'stompWebSocketHandlerMapping'
+2025-03-31 09:38:00,085 DEBUG o.s.w.s.h.AbstractHandlerMethodMapping [restartedMain] 43 mappings in 'requestMappingHandlerMapping'
+2025-03-31 09:38:00,160 DEBUG o.s.w.s.h.SimpleUrlHandlerMapping [restartedMain] Patterns [/webjars/**, /**, /swagger-ui*/*swagger-initializer.js, /swagger-ui*/**] in 'resourceHandlerMapping'
+2025-03-31 09:38:00,238 INFO o.s.s.w.DefaultSecurityFilterChain [restartedMain] Will secure any request with [org.springframework.security.web.session.DisableEncodeUrlFilter@49f5bd30, org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@608f7c4e, org.springframework.security.web.context.SecurityContextHolderFilter@45d15828, org.springframework.security.web.header.HeaderWriterFilter@1476a9a7, org.springframework.web.filter.CorsFilter@1f6e8e5b, org.springframework.security.web.authentication.logout.LogoutFilter@7a86fea1, com.example.backend.fashion.security.JwtAuthenticationFilter@7d39860f, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@34100987, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@6fc119f6, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@296e7ca7, org.springframework.security.web.session.SessionManagementFilter@506f83c8, org.springframework.security.web.access.ExceptionTranslationFilter@7b5962e3, org.springframework.security.web.access.intercept.AuthorizationFilter@67c9c35b]
+2025-03-31 09:38:00,361 DEBUG o.s.m.h.i.AbstractMethodMessageHandler [restartedMain] 
+	c.e.b.f.c.a.AuthController:
+	
+2025-03-31 09:38:00,363 DEBUG o.s.m.h.i.AbstractMethodMessageHandler [restartedMain] 
+	c.e.b.f.c.a.FacebookAuthController:
+	
+2025-03-31 09:38:00,364 DEBUG o.s.m.h.i.AbstractMethodMessageHandler [restartedMain] 
+	c.e.b.f.c.a.GoogleAuthController:
+	
+2025-03-31 09:38:00,365 DEBUG o.s.m.h.i.AbstractMethodMessageHandler [restartedMain] 
+	c.e.b.f.c.c.CartController:
+	
+2025-03-31 09:38:00,366 DEBUG o.s.m.h.i.AbstractMethodMessageHandler [restartedMain] 
+	c.e.b.f.c.p.ProductController:
+	
+2025-03-31 09:38:00,367 DEBUG o.s.m.h.i.AbstractMethodMessageHandler [restartedMain] 
+	c.e.b.f.c.p.PublicApiController:
+	
+2025-03-31 09:38:00,368 DEBUG o.s.m.h.i.AbstractMethodMessageHandler [restartedMain] 
+	c.e.b.f.c.t.EmailTestController:
+	
+2025-03-31 09:38:00,368 DEBUG o.s.m.h.i.AbstractMethodMessageHandler [restartedMain] 
+	c.e.b.f.c.t.MailTestController:
+	
+2025-03-31 09:38:00,369 DEBUG o.s.m.h.i.AbstractMethodMessageHandler [restartedMain] 
+	c.e.b.f.c.w.WishlistController:
+	
+2025-03-31 09:38:00,371 DEBUG o.s.m.h.i.AbstractMethodMessageHandler [restartedMain] 
+	o.s.b.a.w.s.e.BasicErrorController:
+	
+2025-03-31 09:38:00,373 DEBUG o.s.m.h.i.AbstractMethodMessageHandler [restartedMain] 
+	o.s.w.a.OpenApiWebMvcResource:
+	
+2025-03-31 09:38:00,374 DEBUG o.s.m.h.i.AbstractMethodMessageHandler [restartedMain] 
+	o.s.w.u.SwaggerWelcomeWebMvc:
+	
+2025-03-31 09:38:00,375 DEBUG o.s.m.h.i.AbstractMethodMessageHandler [restartedMain] 
+	o.s.w.u.SwaggerConfigResource:
+	
+2025-03-31 09:38:00,456 DEBUG o.s.w.s.m.m.a.RequestMappingHandlerAdapter [restartedMain] ControllerAdvice beans: 0 @ModelAttribute, 0 @InitBinder, 1 RequestBodyAdvice, 1 ResponseBodyAdvice
+2025-03-31 09:38:00,501 DEBUG o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver [restartedMain] ControllerAdvice beans: 2 @ExceptionHandler, 1 ResponseBodyAdvice
+2025-03-31 09:38:00,545 WARN o.s.b.a.t.ThymeleafAutoConfiguration$DefaultTemplateResolverConfiguration [restartedMain] Cannot find template location: classpath:/templates/ (please add some templates, check your Thymeleaf configuration, or set spring.thymeleaf.check-template-location=false)
+2025-03-31 09:38:00,831 INFO o.s.b.d.a.OptionalLiveReloadServer [restartedMain] LiveReload server is running on port 35729
+2025-03-31 09:38:00,854 INFO o.a.j.l.DirectJDKLog [restartedMain] Starting ProtocolHandler ["http-nio-8080"]
+2025-03-31 09:38:00,878 INFO o.s.b.w.e.t.TomcatWebServer [restartedMain] Tomcat started on port 8080 (http) with context path ''
+2025-03-31 09:38:00,881 DEBUG o.s.c.l.CompositeLog [restartedMain] clientOutboundChannel added SubProtocolWebSocketHandler[StompSubProtocolHandler[v10.stomp, v11.stomp, v12.stomp]]
+2025-03-31 09:38:00,882 DEBUG o.s.c.l.CompositeLog [restartedMain] clientInboundChannel added WebSocketAnnotationMethodMessageHandler[prefixes=[/app/]]
+2025-03-31 09:38:00,884 INFO o.s.c.l.CompositeLog [restartedMain] Starting...
+2025-03-31 09:38:00,885 DEBUG o.s.c.l.CompositeLog [restartedMain] clientInboundChannel added SimpleBrokerMessageHandler [org.springframework.messaging.simp.broker.DefaultSubscriptionRegistry@296131dd]
+2025-03-31 09:38:00,885 DEBUG o.s.c.l.CompositeLog [restartedMain] brokerChannel added SimpleBrokerMessageHandler [org.springframework.messaging.simp.broker.DefaultSubscriptionRegistry@296131dd]
+2025-03-31 09:38:00,886 INFO o.s.c.l.CompositeLog [restartedMain] BrokerAvailabilityEvent[available=true, SimpleBrokerMessageHandler [org.springframework.messaging.simp.broker.DefaultSubscriptionRegistry@296131dd]]
+2025-03-31 09:38:00,887 INFO o.s.c.l.CompositeLog [restartedMain] Started.
+2025-03-31 09:38:00,888 DEBUG o.s.c.l.CompositeLog [restartedMain] clientInboundChannel added UserDestinationMessageHandler[DefaultUserDestinationResolver[prefix=/user/]]
+2025-03-31 09:38:00,889 DEBUG o.s.c.l.CompositeLog [restartedMain] brokerChannel added UserDestinationMessageHandler[DefaultUserDestinationResolver[prefix=/user/]]
+2025-03-31 09:38:00,903 INFO o.s.b.StartupInfoLogger [restartedMain] Started BackendApplication in 7.919 seconds (process running for 8.518)
+2025-03-31 09:38:00,910 INFO c.e.b.f.c.EnvConfig [restartedMain] ?ng d?ng ?ã kh?i ??ng thành công
+2025-03-31 09:38:00,911 INFO c.e.b.f.c.EnvConfig [restartedMain] Môi tr??ng hi?n t?i: null
+2025-03-31 09:38:00,912 INFO c.e.b.f.c.EnvConfig [restartedMain] Loading bi?n môi tr??ng t? file .env
+2025-03-31 09:38:00,912 INFO c.e.b.f.c.EnvConfig [restartedMain] ?ã t?i thành công file .env t?: D:\Projects\Project-fashion-shop\backend\.env
+2025-03-31 09:38:00,914 DEBUG c.e.b.f.c.EnvConfig [restartedMain] ?ã ??t bi?n môi tr??ng: JWT_SECRET = daf6****5dbb
+2025-03-31 09:38:00,915 DEBUG c.e.b.f.c.EnvConfig [restartedMain] ?ã ??t bi?n môi tr??ng: GOOGLE_CLIENT_ID = 6955****.com
+2025-03-31 09:38:00,916 DEBUG c.e.b.f.c.EnvConfig [restartedMain] ?ã ??t bi?n môi tr??ng: GOOGLE_CLIENT_SECRET = GOCS****KWQB
+2025-03-31 09:38:00,917 DEBUG c.e.b.f.c.EnvConfig [restartedMain] ?ã ??t bi?n môi tr??ng: FACEBOOK_CLIENT_ID = 1065****6326
+2025-03-31 09:38:00,918 DEBUG c.e.b.f.c.EnvConfig [restartedMain] ?ã ??t bi?n môi tr??ng: FACEBOOK_CLIENT_SECRET = 6706****5c55
+2025-03-31 09:38:00,919 DEBUG c.e.b.f.c.EnvConfig [restartedMain] ?ã ??t bi?n môi tr??ng: DB_USERNAME = ****
+2025-03-31 09:38:00,920 DEBUG c.e.b.f.c.EnvConfig [restartedMain] ?ã ??t bi?n môi tr??ng: DB_PASSWORD = ****
+2025-03-31 09:38:00,921 DEBUG c.e.b.f.c.EnvConfig [restartedMain] ?ã ??t bi?n môi tr??ng: MAIL_USERNAME = lvla****.com
+2025-03-31 09:38:00,923 DEBUG c.e.b.f.c.EnvConfig [restartedMain] ?ã ??t bi?n môi tr??ng: MAIL_PASSWORD = pjsz****ilvs
+2025-03-31 09:38:00,923 INFO c.e.b.f.c.EnvConfig [restartedMain] Google Client ID: 6955****.com
+2025-03-31 09:38:00,924 INFO c.e.b.f.c.EnvConfig [restartedMain] Facebook Client ID: 1065****6326
+2025-03-31 09:38:00,925 INFO c.e.b.f.c.EnvConfig [restartedMain] Database Username: ****
+2025-03-31 09:38:00,926 INFO c.e.b.f.c.EnvConfig [restartedMain] JWT Secret configured: Yes
+2025-03-31 09:38:00,927 INFO c.e.b.f.c.EnvConfig [restartedMain] Mail Username configured: Yes
+2025-03-31 09:38:00,928 INFO c.e.b.f.c.EnvConfig [restartedMain] Spring Google Client ID: 6955****.com
+2025-03-31 09:38:00,929 INFO c.e.b.f.c.EnvConfig [restartedMain] Spring Facebook Client ID: 1065****6326
+2025-03-31 09:38:00,988 DEBUG o.h.e.j.s.SqlStatementLogger [MessageBroker-1] 
+    delete 
+    from
+        users 
+    where
+        is_enabled=0 
+        and verification_code_expiry<?
+2025-03-31 09:39:00,867 INFO o.s.w.s.c.WebSocketMessageBrokerStats [MessageBroker-2] WebSocketSession[0 current WS(0)-HttpStream(0)-HttpPoll(0), 0 total, 0 closed abnormally (0 connect failure, 0 send limit, 0 transport error)], stompSubProtocol[processed CONNECT(0)-CONNECTED(0)-DISCONNECT(0)], stompBrokerRelay[null], inboundChannel[pool size = 0, active threads = 0, queued tasks = 0, completed tasks = 0], outboundChannel[pool size = 0, active threads = 0, queued tasks = 0, completed tasks = 0], sockJsScheduler[pool size = 3, active threads = 1, queued tasks = 1, completed tasks = 1]
+2025-03-31 09:40:42,633 DEBUG o.s.c.l.CompositeLog [SpringApplicationShutdownHook] clientOutboundChannel removed SubProtocolWebSocketHandler[StompSubProtocolHandler[v10.stomp, v11.stomp, v12.stomp]]
+2025-03-31 09:40:42,634 DEBUG o.s.c.l.CompositeLog [SpringApplicationShutdownHook] clientInboundChannel removed WebSocketAnnotationMethodMessageHandler[prefixes=[/app/]]
+2025-03-31 09:40:42,635 INFO o.s.c.l.CompositeLog [SpringApplicationShutdownHook] Stopping...
+2025-03-31 09:40:42,635 INFO o.s.c.l.CompositeLog [SpringApplicationShutdownHook] BrokerAvailabilityEvent[available=false, SimpleBrokerMessageHandler [org.springframework.messaging.simp.broker.DefaultSubscriptionRegistry@296131dd]]
+2025-03-31 09:40:42,636 DEBUG o.s.c.l.CompositeLog [SpringApplicationShutdownHook] clientInboundChannel removed SimpleBrokerMessageHandler [org.springframework.messaging.simp.broker.DefaultSubscriptionRegistry@296131dd]
+2025-03-31 09:40:42,637 DEBUG o.s.c.l.CompositeLog [SpringApplicationShutdownHook] brokerChannel removed SimpleBrokerMessageHandler [org.springframework.messaging.simp.broker.DefaultSubscriptionRegistry@296131dd]
+2025-03-31 09:40:42,638 INFO o.s.c.l.CompositeLog [SpringApplicationShutdownHook] Stopped.
+2025-03-31 09:40:42,638 DEBUG o.s.c.l.CompositeLog [SpringApplicationShutdownHook] clientInboundChannel removed UserDestinationMessageHandler[DefaultUserDestinationResolver[prefix=/user/]]
+2025-03-31 09:40:42,639 DEBUG o.s.c.l.CompositeLog [SpringApplicationShutdownHook] brokerChannel removed UserDestinationMessageHandler[DefaultUserDestinationResolver[prefix=/user/]]
+2025-03-31 09:40:42,654 INFO o.s.o.j.AbstractEntityManagerFactoryBean [SpringApplicationShutdownHook] Closing JPA EntityManagerFactory for persistence unit 'default'
+2025-03-31 09:40:42,658 INFO c.z.h.HikariDataSource [SpringApplicationShutdownHook] HikariPool-1 - Shutdown initiated...
+2025-03-31 09:40:42,667 INFO c.z.h.HikariDataSource [SpringApplicationShutdownHook] HikariPool-1 - Shutdown completed.

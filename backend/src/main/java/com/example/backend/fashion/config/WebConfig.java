@@ -33,12 +33,12 @@ public class WebConfig implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
-            .allowedOriginPatterns("*")  // Cho phép tất cả origins trong development
-            .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH")
-            .allowedHeaders("*")
-            .allowCredentials(true)
-            .exposedHeaders("Authorization", "Content-Type")
-            .maxAge(3600);
+                .allowedOrigins("http://localhost:3000")
+                .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH")
+                .allowedHeaders("Authorization", "Content-Type", "Accept", "Origin", "Access-Control-Allow-Origin")
+                .allowCredentials(true)
+                .exposedHeaders("Authorization", "Content-Type")
+                .maxAge(3600);
     }
     
     @Bean
@@ -46,23 +46,22 @@ public class WebConfig implements WebMvcConfigurer {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         CorsConfiguration config = new CorsConfiguration();
         
-        // Cho phép credentials
         config.setAllowCredentials(true);
-        
-        // Cho phép tất cả origins trong development
-        config.addAllowedOriginPattern("*");
-        
-        // Cho phép tất cả các headers
-        config.addAllowedHeader("*");
-        
-        // Cho phép các methods
-        config.addAllowedMethod("*");
-        
-        // Expose headers
-        config.addExposedHeader("Authorization");
-        config.addExposedHeader("Content-Type");
-        
-        // Cache CORS config trong 1 giờ
+        config.setAllowedOrigins(Arrays.asList("http://localhost:3000"));
+        config.setAllowedHeaders(Arrays.asList(
+            "Authorization", 
+            "Content-Type", 
+            "Accept", 
+            "Origin", 
+            "Access-Control-Allow-Origin"
+        ));
+        config.setAllowedMethods(Arrays.asList(
+            "GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"
+        ));
+        config.setExposedHeaders(Arrays.asList(
+            "Authorization",
+            "Content-Type"
+        ));
         config.setMaxAge(3600L);
         
         source.registerCorsConfiguration("/**", config);
