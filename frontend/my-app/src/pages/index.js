@@ -228,9 +228,9 @@ export default function Home() {
       />
       <Navigation />
 
-      <main className="max-w-[1400px] mx-auto px-4 py-8">
+      <main className="max-w-[1200px] mx-auto px-4 py-8">
         {/* Hero Section */}
-        <section className={styles.heroSection} style={{backgroundImage: 'linear-gradient(90deg, #1e3a8a, #3b82f6)'}}>
+        <section className={styles.heroSection}>
           <div className={styles.heroSectionContent}>
             <h1 className={styles.heroTitle}>
               Khám phá thế giới
@@ -247,44 +247,10 @@ export default function Home() {
           </div>
         </section>
 
-        {/* Categories Section */}
-        <section className="mb-16">
-          <div className={styles.sectionWrapper}>
-            <div className={styles.categoryGrid}>
-              <div className={styles.categoryCard}>
-                <div className={styles.categoryIcon}>👕</div>
-                <h3 className={styles.categoryTitle}>Thời trang</h3>
-                <p className={styles.categoryDescription}>Quần áo, phụ kiện</p>
-              </div>
-              <div className={styles.categoryCard}>
-                <div className={styles.categoryIcon}>💻</div>
-                <h3 className={styles.categoryTitle}>Công nghệ</h3>
-                <p className={styles.categoryDescription}>
-                  Điện thoại, máy tính
-                </p>
-              </div>
-              <div className={styles.categoryCard}>
-                <div className={styles.categoryIcon}>⌚</div>
-                <h3 className={styles.categoryTitle}>Đồng hồ</h3>
-                <p className={styles.categoryDescription}>
-                  Thông minh & cổ điển
-                </p>
-              </div>
-              <div className={styles.categoryCard}>
-                <div className={styles.categoryIcon}>🎮</div>
-                <h3 className={styles.categoryTitle}>Gaming</h3>
-                <p className={styles.categoryDescription}>
-                  Máy chơi game & phụ kiện
-                </p>
-              </div>
-            </div>
-          </div>
-        </section>
-
         {/* Best Sellers Section */}
         {bestSellers.length > 0 && (
-          <section className="mb-16">
-            <div className={styles.sectionWrapper}>
+          <section className={`${styles.section} ${styles.bestSellersSection}`}>
+            <div className={styles.sectionInner}>
               <div className={styles.sectionHeader}>
                 <div>
                   <h2 className={styles.sectionTitle}>Sản phẩm bán chạy</h2>
@@ -310,12 +276,13 @@ export default function Home() {
                 </Link>
               </div>
               <div className={styles.productGrid}>
-                {bestSellers.map((product) => (
+                {bestSellers.slice(0, 5).map((product) => (
                   <ProductCard 
                     key={product.id} 
                     product={product} 
                     updateCartCount={updateCartCount}
                     updateWishlistCount={updateWishlistCount}
+                    sectionType="bestSeller"
                   />
                 ))}
               </div>
@@ -325,8 +292,8 @@ export default function Home() {
 
         {/* New Products Section */}
         {newProducts.length > 0 && (
-          <section className="mb-16">
-            <div className={styles.sectionWrapper}>
+          <section className={`${styles.section} ${styles.newProductsSection}`}>
+            <div className={styles.sectionInner}>
               <div className={styles.sectionHeader}>
                 <div>
                   <h2 className={styles.sectionTitle}>Sản phẩm mới</h2>
@@ -352,12 +319,13 @@ export default function Home() {
                 </Link>
               </div>
               <div className={styles.productGrid}>
-                {newProducts.map((product) => (
+                {newProducts.slice(0, 5).map((product) => (
                   <ProductCard 
                     key={product.id} 
                     product={product}
                     updateCartCount={updateCartCount}
                     updateWishlistCount={updateWishlistCount}
+                    sectionType="newProduct"
                   />
                 ))}
               </div>
@@ -366,59 +334,47 @@ export default function Home() {
         )}
 
         {/* All Products Section */}
-        <section id="all-products" className={styles.allProductsSection}>
-          <div className={styles.sectionHeader}>
-            <div>
-              <h2 className={styles.sectionTitle}>Tất cả sản phẩm</h2>
-              <p className={styles.sectionSubtitle}>
-                Khám phá toàn bộ sản phẩm đang có
-              </p>
-            </div>
-            <div className={styles.filterBar}>
-              <select 
-                className={styles.sortSelect}
-                value={sortOption}
-                onChange={handleSortChange}
-              >
-                <option value="newest">Mới nhất</option>
-                <option value="price-asc">Giá: Thấp đến cao</option>
-                <option value="price-desc">Giá: Cao đến thấp</option>
-                <option value="rating-desc">Đánh giá cao nhất</option>
-              </select>
-            </div>
-          </div>
-
-          {getCurrentPageProducts().length > 0 ? (
-            <>
-              <div className={styles.productGrid}>
-                {getCurrentPageProducts().map((product) => (
-                  <ProductCard 
-                    key={product.id} 
-                    product={product}
-                    updateCartCount={updateCartCount}
-                    updateWishlistCount={updateWishlistCount}
-                  />
-                ))}
+        <section className={`${styles.section} ${styles.allProductsSection}`}>
+          <div className={styles.sectionInner}>
+            <div className={styles.sectionHeader}>
+              <div>
+                <h2 className={styles.sectionTitle}>Tất cả sản phẩm</h2>
+                <p className={styles.sectionSubtitle}>
+                  Khám phá toàn bộ sản phẩm đang có
+                </p>
               </div>
-              {totalPages > 1 && (
-                <Pagination 
-                  currentPage={currentPage}
-                  totalPages={totalPages}
-                  onPageChange={handlePageChange}
+              <div className={styles.filterBar}>
+                <select 
+                  className={styles.sortSelect}
+                  value={sortOption}
+                  onChange={handleSortChange}
+                >
+                  <option value="newest">Mới nhất</option>
+                  <option value="price-asc">Giá: Thấp đến cao</option>
+                  <option value="price-desc">Giá: Cao đến thấp</option>
+                  <option value="rating-desc">Đánh giá cao nhất</option>
+                </select>
+              </div>
+            </div>
+            <div className={styles.productGrid}>
+              {getCurrentPageProducts().slice(0, 5).map((product) => (
+                <ProductCard 
+                  key={product.id} 
+                  product={product}
+                  updateCartCount={updateCartCount}
+                  updateWishlistCount={updateWishlistCount}
+                  sectionType="allProduct"
                 />
-              )}
-            </>
-          ) : (
-            <div className={styles.noProducts}>
-              <div className={styles.noProductsContent}>
-                <svg className={styles.noProductsIcon} fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-                <h3 className={styles.noProductsTitle}>Không có sản phẩm nào</h3>
-                <p className={styles.noProductsText}>Chúng tôi chưa có sản phẩm nào trong danh mục này.</p>
-              </div>
+              ))}
             </div>
-          )}
+            {totalPages > 1 && (
+              <Pagination 
+                currentPage={currentPage}
+                totalPages={totalPages}
+                onPageChange={handlePageChange}
+              />
+            )}
+          </div>
         </section>
       </main>
 

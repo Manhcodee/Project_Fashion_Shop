@@ -6,7 +6,7 @@ import { toast } from 'react-toastify';
 import api from '../../services/api';
 import styles from '../../styles/ProductCard.module.css';
 
-const ProductCard = ({ product, updateCartCount, updateWishlistCount }) => {
+const ProductCard = ({ product, updateCartCount, updateWishlistCount, sectionType }) => {
   const router = useRouter();
   const [isHovered, setIsHovered] = useState(false);
   const [isWishlisted, setIsWishlisted] = useState(false);
@@ -187,7 +187,7 @@ const ProductCard = ({ product, updateCartCount, updateWishlistCount }) => {
   return (
     <Link href={`/product/${id}`}>
       <div 
-        className={styles.productCard}
+        className={`${styles.productCard} ${sectionType ? styles[`${sectionType}Card`] : ''}`}
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
       >
